@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+    <lst name="responseHeader">
+        <int name="status">0</int>
+        <int name="QTime">201</int>
+        <lst name="params">
+            <str name="q">guice</str>
+            <str name="core"/>
+            <str name="defType">dismax</str>
+            <str name="qf">text^20 g^5 a^10</str>
+            <str name="indent">off</str>
+            <str name="spellcheck">true</str>
+            <str name="fl">id,g,a,latestVersion,p,ec,repositoryId,text,timestamp,versionCount</str>
+            <str name="start"/>
+            <str name="sort">score desc,timestamp desc,g asc,a asc</str>
+            <str name="spellcheck.count">5</str>
+            <str name="rows">20</str>
+            <str name="wt">xml</str>
+            <str name="version">2.2</str>
+        </lst>
+    </lst>
+    <result name="response" numFound="917" start="0">
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>-sources.jar.sha256</str>
+                <str>-javadoc.jar</str>
+                <str>-javadoc.jar.sha512</str>
+                <str>.module.asc.sha256</str>
+                <str>.jar.asc.sha256</str>
+                <str>.module.asc.sha512</str>
+                <str>-javadoc.jar.sha256</str>
+                <str>.jar.asc.sha512</str>
+                <str>.pom.sha512</str>
+                <str>-sources.jar</str>
+                <str>.module</str>
+                <str>-sources.jar.asc.sha512</str>
+                <str>.module.sha256</str>
+                <str>.pom</str>
+                <str>-sources.jar.asc.sha256</str>
+                <str>.module.sha512</str>
+                <str>-javadoc.jar.asc.sha256</str>
+                <str>.pom.asc.sha256</str>
+                <str>.jar</str>
+                <str>-javadoc.jar.asc.sha512</str>
+                <str>.pom.asc.sha512</str>
+                <str>.jar.sha512</str>
+                <str>-sources.jar.sha512</str>
+                <str>.pom.sha256</str>
+                <str>.jar.sha256</str>
+            </arr>
+            <str name="g">com.codeborne.replay</str>
+            <str name="id">com.codeborne.replay:guice</str>
+            <str name="latestVersion">1.10.0</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>com.codeborne.replay</str>
+                <str>guice</str>
+                <str>-sources.jar.sha256</str>
+                <str>-javadoc.jar</str>
+                <str>-javadoc.jar.sha512</str>
+                <str>.module.asc.sha256</str>
+                <str>.jar.asc.sha256</str>
+                <str>.module.asc.sha512</str>
+                <str>-javadoc.jar.sha256</str>
+                <str>.jar.asc.sha512</str>
+                <str>.pom.sha512</str>
+                <str>-sources.jar</str>
+                <str>.module</str>
+                <str>-sources.jar.asc.sha512</str>
+                <str>.module.sha256</str>
+                <str>.pom</str>
+                <str>-sources.jar.asc.sha256</str>
+                <str>.module.sha512</str>
+                <str>-javadoc.jar.asc.sha256</str>
+                <str>.pom.asc.sha256</str>
+                <str>.jar</str>
+                <str>-javadoc.jar.asc.sha512</str>
+                <str>.pom.asc.sha512</str>
+                <str>.jar.sha512</str>
+                <str>-sources.jar.sha512</str>
+                <str>.pom.sha256</str>
+                <str>.jar.sha256</str>
+            </arr>
+            <long name="timestamp">1662890080000</long>
+            <int name="versionCount">17</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>.pom</str>
+            </arr>
+            <str name="g">org.openidentityplatform.commons</str>
+            <str name="id">org.openidentityplatform.commons:guice</str>
+            <str name="latestVersion">2.0.16</str>
+            <str name="p">pom</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>org.openidentityplatform.commons</str>
+                <str>guice</str>
+                <str>.pom</str>
+            </arr>
+            <long name="timestamp">1659426998000</long>
+            <int name="versionCount">10</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>.pom</str>
+            </arr>
+            <str name="g">io.github.qsy7.java.infrastructure.inject.modules.web.providers</str>
+            <str name="id">io.github.qsy7.java.infrastructure.inject.modules.web.providers:guice</str>
+            <str name="latestVersion">0.1.2</str>
+            <str name="p">pom</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>io.github.qsy7.java.infrastructure.inject.modules.web.providers</str>
+                <str>guice</str>
+                <str>.pom</str>
+            </arr>
+            <long name="timestamp">1649446769000</long>
+            <int name="versionCount">2</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <str name="g">io.github.qsy7.java.modules.queue.providers.datastore.providers</str>
+            <str name="id">io.github.qsy7.java.modules.queue.providers.datastore.providers:guice</str>
+            <str name="latestVersion">0.1.2</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>io.github.qsy7.java.modules.queue.providers.datastore.providers</str>
+                <str>guice</str>
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <long name="timestamp">1649446752000</long>
+            <int name="versionCount">2</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <str name="g">io.github.qsy7.java.modules.encryption.modules.cli.providers</str>
+            <str name="id">io.github.qsy7.java.modules.encryption.modules.cli.providers:guice</str>
+            <str name="latestVersion">0.1.2</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>io.github.qsy7.java.modules.encryption.modules.cli.providers</str>
+                <str>guice</str>
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <long name="timestamp">1649446708000</long>
+            <int name="versionCount">2</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <str name="g">io.github.qsy7.java.modules.ssh.providers</str>
+            <str name="id">io.github.qsy7.java.modules.ssh.providers:guice</str>
+            <str name="latestVersion">0.1.2</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>io.github.qsy7.java.modules.ssh.providers</str>
+                <str>guice</str>
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <long name="timestamp">1649446682000</long>
+            <int name="versionCount">2</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>.pom</str>
+            </arr>
+            <str name="g">io.github.qsy7.java.configuration.cli</str>
+            <str name="id">io.github.qsy7.java.configuration.cli:guice</str>
+            <str name="latestVersion">0.1.2</str>
+            <str name="p">pom</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>io.github.qsy7.java.configuration.cli</str>
+                <str>guice</str>
+                <str>.pom</str>
+            </arr>
+            <long name="timestamp">1649446661000</long>
+            <int name="versionCount">2</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <str name="g">io.github.qsy7.java.infrastructure.metrics.modules.prometheus.providers</str>
+            <str name="id">io.github.qsy7.java.infrastructure.metrics.modules.prometheus.providers:guice</str>
+            <str name="latestVersion">0.1.2</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>io.github.qsy7.java.infrastructure.metrics.modules.prometheus.providers</str>
+                <str>guice</str>
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <long name="timestamp">1649446650000</long>
+            <int name="versionCount">2</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <str name="g">io.github.qsy7.java.modules.linux-builder.modules.cli.providers</str>
+            <str name="id">io.github.qsy7.java.modules.linux-builder.modules.cli.providers:guice</str>
+            <str name="latestVersion">0.1.2</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>io.github.qsy7.java.modules.linux-builder.modules.cli.providers</str>
+                <str>guice</str>
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <long name="timestamp">1649446642000</long>
+            <int name="versionCount">2</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <str name="g">io.github.qsy7.java.modules.shell.providers</str>
+            <str name="id">io.github.qsy7.java.modules.shell.providers:guice</str>
+            <str name="latestVersion">0.1.2</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>io.github.qsy7.java.modules.shell.providers</str>
+                <str>guice</str>
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <long name="timestamp">1649446609000</long>
+            <int name="versionCount">2</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <str name="g">io.github.qsy7.java.infrastructure.datastore.providers.jdo.providers</str>
+            <str name="id">io.github.qsy7.java.infrastructure.datastore.providers.jdo.providers:guice</str>
+            <str name="latestVersion">0.1.2</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>io.github.qsy7.java.infrastructure.datastore.providers.jdo.providers</str>
+                <str>guice</str>
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <long name="timestamp">1649446585000</long>
+            <int name="versionCount">2</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <str name="g">io.github.qsy7.java.infrastructure.metrics.modules.elastic.providers</str>
+            <str name="id">io.github.qsy7.java.infrastructure.metrics.modules.elastic.providers:guice</str>
+            <str name="latestVersion">0.1.2</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>io.github.qsy7.java.infrastructure.metrics.modules.elastic.providers</str>
+                <str>guice</str>
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <long name="timestamp">1649446584000</long>
+            <int name="versionCount">2</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <str name="g">io.github.qsy7.java.infrastructure.inject.providers</str>
+            <str name="id">io.github.qsy7.java.infrastructure.inject.providers:guice</str>
+            <str name="latestVersion">0.1.2</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>io.github.qsy7.java.infrastructure.inject.providers</str>
+                <str>guice</str>
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <long name="timestamp">1649446566000</long>
+            <int name="versionCount">2</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <str name="g">io.github.qsy7.java.infrastructure.metrics.modules.netflix-atlas.providers</str>
+            <str name="id">io.github.qsy7.java.infrastructure.metrics.modules.netflix-atlas.providers:guice</str>
+            <str name="latestVersion">0.1.2</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>io.github.qsy7.java.infrastructure.metrics.modules.netflix-atlas.providers</str>
+                <str>guice</str>
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <long name="timestamp">1649446528000</long>
+            <int name="versionCount">2</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>-javadoc.jar</str>
+                <str>-sources.jar</str>
+                <str>-test-sources.jar</str>
+                <str>-tests.jar</str>
+                <str>.jar</str>
+                <str>-classes.jar</str>
+                <str>.pom</str>
+            </arr>
+            <str name="g">com.google.inject</str>
+            <str name="id">com.google.inject:guice</str>
+            <str name="latestVersion">5.1.0</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>com.google.inject</str>
+                <str>guice</str>
+                <str>-javadoc.jar</str>
+                <str>-sources.jar</str>
+                <str>-test-sources.jar</str>
+                <str>-tests.jar</str>
+                <str>.jar</str>
+                <str>-classes.jar</str>
+                <str>.pom</str>
+            </arr>
+            <long name="timestamp">1643061977000</long>
+            <int name="versionCount">19</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>-sources.jar</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+                <str>.pom</str>
+            </arr>
+            <str name="g">com.tomtom.speedtools</str>
+            <str name="id">com.tomtom.speedtools:guice</str>
+            <str name="latestVersion">3.4.3</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>com.tomtom.speedtools</str>
+                <str>guice</str>
+                <str>-sources.jar</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+                <str>.pom</str>
+            </arr>
+            <long name="timestamp">1641459923000</long>
+            <int name="versionCount">54</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>-sources.jar</str>
+                <str>-javadoc.jar</str>
+                <str>-test-sources.jar</str>
+                <str>.jar</str>
+                <str>-tests.jar</str>
+                <str>-classes.jar</str>
+                <str>.pom</str>
+            </arr>
+            <str name="g">io.forestframework</str>
+            <str name="id">io.forestframework:guice</str>
+            <str name="latestVersion">5.0.1.1</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>io.forestframework</str>
+                <str>guice</str>
+                <str>-sources.jar</str>
+                <str>-javadoc.jar</str>
+                <str>-test-sources.jar</str>
+                <str>.jar</str>
+                <str>-tests.jar</str>
+                <str>-classes.jar</str>
+                <str>.pom</str>
+            </arr>
+            <long name="timestamp">1622975695000</long>
+            <int name="versionCount">1</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>.module.asc.sha256</str>
+                <str>.jar.sha512</str>
+                <str>.jar.sha256</str>
+                <str>.pom.asc.sha512</str>
+                <str>.pom.sha256</str>
+                <str>-sources.jar.sha256</str>
+                <str>-javadoc.jar.asc.sha512</str>
+                <str>.module.asc.sha512</str>
+                <str>.pom</str>
+                <str>-sources.jar.asc.sha256</str>
+                <str>.jar.asc.sha256</str>
+                <str>.pom.asc.sha256</str>
+                <str>-javadoc.jar</str>
+                <str>-sources.jar</str>
+                <str>.jar.asc.sha512</str>
+                <str>.jar</str>
+                <str>.module</str>
+                <str>-javadoc.jar.asc.sha256</str>
+                <str>-javadoc.jar.sha512</str>
+                <str>-sources.jar.sha512</str>
+                <str>.module.sha512</str>
+                <str>.module.sha256</str>
+                <str>-sources.jar.asc.sha512</str>
+                <str>.pom.sha512</str>
+                <str>-javadoc.jar.sha256</str>
+            </arr>
+            <str name="g">org.xbib</str>
+            <str name="id">org.xbib:guice</str>
+            <str name="latestVersion">4.4.2.0</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>org.xbib</str>
+                <str>guice</str>
+                <str>.module.asc.sha256</str>
+                <str>.jar.sha512</str>
+                <str>.jar.sha256</str>
+                <str>.pom.asc.sha512</str>
+                <str>.pom.sha256</str>
+                <str>-sources.jar.sha256</str>
+                <str>-javadoc.jar.asc.sha512</str>
+                <str>.module.asc.sha512</str>
+                <str>.pom</str>
+                <str>-sources.jar.asc.sha256</str>
+                <str>.jar.asc.sha256</str>
+                <str>.pom.asc.sha256</str>
+                <str>-javadoc.jar</str>
+                <str>-sources.jar</str>
+                <str>.jar.asc.sha512</str>
+                <str>.jar</str>
+                <str>.module</str>
+                <str>-javadoc.jar.asc.sha256</str>
+                <str>-javadoc.jar.sha512</str>
+                <str>-sources.jar.sha512</str>
+                <str>.module.sha512</str>
+                <str>.module.sha256</str>
+                <str>-sources.jar.asc.sha512</str>
+                <str>.pom.sha512</str>
+                <str>-javadoc.jar.sha256</str>
+            </arr>
+            <long name="timestamp">1622846179000</long>
+            <int name="versionCount">4</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>-javadoc.jar</str>
+                <str>-sources.jar</str>
+                <str>-test-sources.jar</str>
+                <str>-tests.jar</str>
+                <str>.jar</str>
+                <str>.pom</str>
+            </arr>
+            <str name="g">ca.stellardrift.guice-backport</str>
+            <str name="id">ca.stellardrift.guice-backport:guice</str>
+            <str name="latestVersion">5.0.1</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>ca.stellardrift.guice-backport</str>
+                <str>guice</str>
+                <str>-javadoc.jar</str>
+                <str>-sources.jar</str>
+                <str>-test-sources.jar</str>
+                <str>-tests.jar</str>
+                <str>.jar</str>
+                <str>.pom</str>
+            </arr>
+            <long name="timestamp">1616993397000</long>
+            <int name="versionCount">1</int>
+        </doc>
+        <doc>
+            <str name="a">guice</str>
+            <arr name="ec">
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <str name="g">io.github.qsy7.java.infrastructure.datastore.modules.jdbc-run.providers</str>
+            <str name="id">io.github.qsy7.java.infrastructure.datastore.modules.jdbc-run.providers:guice</str>
+            <str name="latestVersion">0.1.0</str>
+            <str name="p">jar</str>
+            <str name="repositoryId">central</str>
+            <arr name="text">
+                <str>io.github.qsy7.java.infrastructure.datastore.modules.jdbc-run.providers</str>
+                <str>guice</str>
+                <str>-sources.jar</str>
+                <str>.pom</str>
+                <str>-javadoc.jar</str>
+                <str>.jar</str>
+            </arr>
+            <long name="timestamp">1576535830000</long>
+            <int name="versionCount">1</int>
+        </doc>
+    </result>
+    <lst name="spellcheck">
+        <lst name="suggestions"/>
+    </lst>
+</response>
