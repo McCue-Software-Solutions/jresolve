@@ -12,20 +12,20 @@ import java.io.File;
 import java.io.IOException;
 
 class XMLParserTest {
-    DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    Document doc;
 
-    XMLParserTest() throws ParserConfigurationException {
+    XMLParserTest() throws ParserConfigurationException, IOException, SAXException {
+        DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        doc = dBuilder.parse(new File("src/test/files/response.xml"));
     }
 
     @Test
-    void extractXMLVersion() throws IOException, SAXException {
-        Document doc = dBuilder.parse(new File("src/test/files/response.xml"));
+    void extractXMLVersion() {
         System.out.println(doc.getXmlVersion());
     }
 
     @Test
-    void extractStringTextContent() throws IOException, SAXException {
-        Document doc = dBuilder.parse(new File("src/test/files/response.xml"));
+    void extractStringTextContent() {
         NodeList l = doc.getElementsByTagName("str");
         for (int i = 0; i < l.getLength(); i++) {
             Node node = l.item(i);
