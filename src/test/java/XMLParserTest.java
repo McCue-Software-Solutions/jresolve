@@ -11,8 +11,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class XMLParserTest {
     DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
@@ -20,9 +18,14 @@ class XMLParserTest {
     }
 
     @Test
-    void parse() throws IOException, SAXException {
+    void extractXMLVersion() throws IOException, SAXException {
         Document doc = dBuilder.parse(new File("src/test/files/response.xml"));
         System.out.println(doc.getXmlVersion());
+    }
+
+    @Test
+    void extractStringTextContent() throws IOException, SAXException {
+        Document doc = dBuilder.parse(new File("src/test/files/response.xml"));
         NodeList l = doc.getElementsByTagName("str");
         for (int i = 0; i < l.getLength(); i++) {
             Node node = l.item(i);
