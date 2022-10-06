@@ -18,7 +18,7 @@
                 uses: actions/checkout@v1
 
               - name: Build and Run Tests
-                run: # this is where tests are run
+                run: echo "JUnit goes here" # this is where tests are run
 
               - name: Publish Test Report
                 uses: mikepenz/action-junit-report@v3
