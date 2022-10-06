@@ -11,6 +11,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 class XMLParserTest {
     Document doc;
 
@@ -21,15 +23,14 @@ class XMLParserTest {
 
     @Test
     void extractXMLVersion() {
-        System.out.println(doc.getXmlVersion());
+        assertEquals(doc.getXmlVersion(), "1.0");
     }
 
     @Test
-    void extractStringTextContent() {
-        NodeList l = doc.getElementsByTagName("str");
-        for (int i = 0; i < l.getLength(); i++) {
-            Node node = l.item(i);
-            System.out.println(node.getTextContent());
-        }
+    void extractFirstStrNode() {
+        Node first = doc.getElementsByTagName("str").item(0);
+        assertEquals(first.getTextContent(), "guice");
+        assertEquals(first.getNodeName(), "str");
+        assertEquals(first.getAttributes().getNamedItem("name").getNodeValue(), "q");
     }
 }
