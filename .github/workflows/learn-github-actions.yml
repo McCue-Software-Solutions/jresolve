@@ -3,7 +3,7 @@ run-name: Testing Github Actions setup process
 on: [push]
 jobs:
         check-bats-version:
-                rus-on: ubuntu-latest
+                runs-on: ubuntu-latest
                 steps:
                         - uses: actions/checkout@v3
                         - uses: actions/setup-node@v3
