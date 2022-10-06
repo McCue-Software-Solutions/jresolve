@@ -1,0 +1,26 @@
+# This file defines a Github Workflow which is used to test the Maven Central loop.
+# When a commit is pushed to the respository, this Workflow will be automatically run on the
+# requested changes to ensure the repository still builds successfully and that a call and
+# response can be made with the Maven Central API.
+# This workflow is designed to work only on a linux server.
+#
+  name: Maven Central Loop
+
+  # Define the Workflow's triggers
+  on: [push]
+
+  #This is where the build commands will go when it is integrated with the rest of Sprint 1
+  jobs:
+      build:
+          runs-on: ubuntu-latest
+
+          steps:
+                - name: Checkout the repo
+                  uses: actions/checkout@v3
+
+                - name: Setup JDK 19
+                  uses: actions/setup-java@v1
+                  with:
+                      java-version: 19
+
+                - run: java -version
