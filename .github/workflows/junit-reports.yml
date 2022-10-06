@@ -6,7 +6,10 @@
 
   name: JUnit Report
 
-  on: [push]
+  on:
+    pull_request:
+      branches:
+        - main
 
   jobs:
       build:
