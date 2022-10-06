@@ -3,12 +3,10 @@
 # When a Pull Request is made to the respository, this Workflow will be automatically run on the
 # requested changes to generate an easy to parse result of the JUnit run.
 # This workflow is designed to work only on a linux server.
-#
+
   name: JUnit Report
 
-  on:
-      pull_request:
-          branch: [main]
+  on: [pull_request]
 
   jobs:
       build:

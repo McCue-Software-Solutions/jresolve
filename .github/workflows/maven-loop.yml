@@ -3,7 +3,7 @@
 # requested changes to ensure the repository still builds successfully and that a call and
 # response can be made with the Maven Central API.
 # This workflow is designed to work only on a linux server.
-#
+
   name: Maven Central Loop
 
   # Define the Workflow's triggers
