@@ -1,0 +1,29 @@
+# This file defines a Github Workflow which generates the JUnit Report and marks
+# results as Pull Request Annotations.
+# When a Pull Request is made to the respository, this Workflow will be automatically run on the
+# requested changes to generate an easy to parse result of the JUnit run.
+# This workflow is designed to work only on a linux server.
+#
+  name: JUnit Report
+
+  on:
+      pull_request:
+          branch: [main]
+
+  jobs:
+      build:
+          name: Build and Run Tests
+          runs-on: ubuntu-latest
+
+          steps:
+              - name: Checkout Repo
+                uses: actions/checkout@v1
+
+              - name: Build and Run Tests
+                run: # this is where tests are run
+
+              - name: Publish Test Report
+                uses: mikepenz/action-junit-report@v3
+                if: always() # run even if the next fails
+                with:
+                    report_paths: '**/build/test-results/test/TEST=*.xml'

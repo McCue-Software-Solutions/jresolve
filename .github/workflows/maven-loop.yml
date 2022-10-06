@@ -15,7 +15,7 @@
           runs-on: ubuntu-latest
 
           steps:
-                - name: Checkout the repo
+                - name: Checkout the Repo
                   uses: actions/checkout@v3
 
                 - name: Setup JDK 19
