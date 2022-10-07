@@ -18,7 +18,7 @@ class XMLParserTest {
 
     XMLParserTest() throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        doc = dBuilder.parse(new File("src/test/files/response.xml"));
+        doc = dBuilder.parse(new File("src/test/resources/response.xml"));
     }
 
     @Test
