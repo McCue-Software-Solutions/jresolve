@@ -3,6 +3,7 @@ package dev.mccue.resolve.maven;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.Objects;
 
 import dev.mccue.resolve.util.Authentication;
 
@@ -25,8 +26,34 @@ public final class MavenRepository {
         return version;
     }
 
-    public MavenRepository(String root) {
+    public MavenRepository(
+        String root,
+        Optional<Authentication> authentication
+    ) {
         this.root = root;
+        this.authentication = authentication;
+    }
+
+    public String root() { return this.root; }
+    public Optional<Authentication> authentication() { return this.authentication; }
+
+    @Override
+    public String toString() {
+        return "MavenRepository[name=" + this.root + ", authentication=" + this.authentication + "]";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return (this == o) || (
+            o instanceof MavenRepository other &&
+            Objects.equals(this.root, other.root) &&
+            Objects.equals(this.authentication, other.authentication)
+        );
+    }
+
+    @Override
+    public int hashCode() {
+        return this.root.hashCode() * this.authentication.hashCode();
     }
 
     public String urlFor(List<String> path) {
