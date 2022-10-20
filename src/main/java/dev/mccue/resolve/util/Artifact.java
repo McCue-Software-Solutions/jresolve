@@ -16,9 +16,8 @@ record Artifact (
     }
 
     public Artifact withChanging(boolean changing) {
-        return new Artifact(url, Map.of(), Map.of(), changing, false, Optional.empty());
+        return new Artifact(this.url, this.checksumUrls, this.extra, changing, this.optional, this.authentication);
     }
-
 
     public static Artifact fromUrl(String url) {
         String url0;
