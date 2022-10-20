@@ -1,11 +1,15 @@
 package dev.mccue.resolve.maven;
 
+import java.lang.StackWalker.Option;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.Objects;
 
 import dev.mccue.resolve.util.Authentication;
+import dev.mccue.resolve.util.Artifact;
 
 public final class MavenRepository {
     private final String root;
@@ -56,6 +60,14 @@ public final class MavenRepository {
         return this.root.hashCode() * this.authentication.hashCode();
     }
 
+    public MavenRepository withChanging(boolean changing) {
+        return this;
+    }
+
+    private Iterator<String> modulePath(Module module)  {
+
+    }
+
     public String urlFor(List<String> path) {
         var b = new StringBuilder(root);
         b.append('/');
@@ -85,6 +97,15 @@ public final class MavenRepository {
         }
 
         return b.toString();
+    }
+
+    public Artifact projectArtifact(
+        Module module,
+        String version,
+        Optional<String> versioningValue
+    ) {
+        var path = moduleVersionPath(module, version) + String.format("%s-%s.pom", module.getName(), versioningValue.orElse(version) );
+        return new Artifact(urlFor(null), Map.of(), Map.of(), changing.getOrElse(isSnapshot(version)), false, authentication);
     }
 
 

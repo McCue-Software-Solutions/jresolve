@@ -3,7 +3,7 @@ package dev.mccue.resolve.util;
 import java.util.Optional;
 import java.util.Map;
 
-record Artifact (
+public record Artifact (
     String url, 
     Map<String, String> checksumUrls,
     Map<String, Artifact> extra,
