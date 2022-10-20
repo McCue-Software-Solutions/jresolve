@@ -1,6 +1,7 @@
 package dev.mccue.resolve.maven;
 
 import java.lang.StackWalker.Option;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -10,10 +11,12 @@ import java.util.Objects;
 
 import dev.mccue.resolve.util.Authentication;
 import dev.mccue.resolve.util.Artifact;
+import dev.mccue.resolve.core.Module;
 
 public final class MavenRepository {
     private final String root;
     private final Optional<Authentication> authentication;
+    private boolean sbtAttrStub;
 
     private static final Pattern SNAPSHOT_TIMESTAMP =
             Pattern.compile("(.*-)?[0-9]{8}\\.[0-9]{6}-[0-9]+");
@@ -30,12 +33,33 @@ public final class MavenRepository {
         return version;
     }
 
+    private static String dirModuleName(Module module, Boolean sbtAttrStub) {
+        if (sbtAttrStub) {
+            var name = module.name().value();
+
+            return name;
+        } else {
+            return module.name().value();
+        }
+    }
+
     public MavenRepository(
         String root,
         Optional<Authentication> authentication
     ) {
         this.root = root;
         this.authentication = authentication;
+        this.sbtAttrStub = true;
+    }
+
+    public MavenRepository(
+        String root,
+        Optional<Authentication> authentication,
+        boolean sbtAttrStub
+    ) {
+        this.root = root;
+        this.authentication = authentication;
+        this.sbtAttrStub = sbtAttrStub;
     }
 
     public String root() { return this.root; }
@@ -64,8 +88,16 @@ public final class MavenRepository {
         return this;
     }
 
-    private Iterator<String> modulePath(Module module)  {
+    private List<String> modulePath(Module module)  {
+        var list = Arrays.asList(module.organization().value().split("."));
+        list.add(dirModuleName(module, sbtAttrStub));
+        return list;
+    }
 
+    private List<String> moduleVersionPath(Module module, String version) {
+        var list = modulePath(module);
+        list.add(toBaseVersion(version));
+        return list;
     }
 
     public String urlFor(List<String> path) {
@@ -104,8 +136,16 @@ public final class MavenRepository {
         String version,
         Optional<String> versioningValue
     ) {
-        var path = moduleVersionPath(module, version) + String.format("%s-%s.pom", module.getName(), versioningValue.orElse(version) );
-        return new Artifact(urlFor(null), Map.of(), Map.of(), changing.getOrElse(isSnapshot(version)), false, authentication);
+        var path = moduleVersionPath(module, version);
+        path.add(String.format("%s-%s.pom", module.name().value(), versioningValue.orElse(version)));
+
+        return new Artifact(
+            urlFor(path), 
+            Map.of(), 
+            Map.of(), 
+            false, 
+            false, 
+            authentication);
     }
 
 
