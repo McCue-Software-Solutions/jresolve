@@ -1,8 +1,6 @@
 package dev.mccue.resolve.maven;
 
-import java.lang.StackWalker.Option;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,7 +9,10 @@ import java.util.Objects;
 
 import dev.mccue.resolve.util.Authentication;
 import dev.mccue.resolve.util.Artifact;
+import dev.mccue.resolve.core.Classifier;
+import dev.mccue.resolve.core.Extension;
 import dev.mccue.resolve.core.Module;
+import dev.mccue.resolve.core.SnapshotVersioning;
 
 public final class MavenRepository {
     private final String root;
@@ -31,6 +32,14 @@ public final class MavenRepository {
 
         }
         return version;
+    }
+
+    public static Optional<String> mavenVersioning (
+        SnapshotVersioning snapshotVersioning,
+        Classifier classifier,
+        Extension extension
+    ) {
+        return Optional.empty();
     }
 
     private static String dirModuleName(Module module, Boolean sbtAttrStub) {
