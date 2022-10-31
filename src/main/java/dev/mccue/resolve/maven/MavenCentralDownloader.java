@@ -1,4 +1,4 @@
-package dev.mccue.resolve;
+package dev.mccue.resolve.maven;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class MavenCentralDownloader {
     private final String path;
 
     /**
-     * Constructor for dev.mccue.resolve.MavenCentralDownloader
+     * Constructor for dev.mccue.resolve.maven.MavenCentralDownloader
      * Checks the connection for successful 200 response
      *
      * @param group   the name of dependencies' group
@@ -84,7 +84,7 @@ public class MavenCentralDownloader {
     }
 
     public static void main(String[] args) throws Exception {
-        var u = new MavenCentralDownloader("junit", "junit", "4.9", "./downloads/junit/");
+        var u = new MavenCentralDownloader("junit", "junit", "3.8", "./downloads/junit3/");
         u.getPOM();
         u.getJar();
     }
