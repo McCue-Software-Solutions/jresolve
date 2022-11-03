@@ -62,6 +62,27 @@ public final class MavenRepository {
         }
     }
 
+    private static String actualRoot(String root) {
+        if (root.endsWith("/")) 
+            return root.substring(0, root.length() - 1);
+        else 
+            return root;
+    }    
+
+    public static MavenRepository apply(String root) {
+        return new MavenRepository(actualRoot(root));
+    }
+    public static MavenRepository apply(String root, Optional<Authentication> authentication) {
+        return new MavenRepository(root, authentication);
+    }
+    
+    public MavenRepository(
+        String root
+    ) {
+        this.root = root;
+        this.authentication = Optional.empty();
+    }
+
     public MavenRepository(
         String root,
         Optional<Authentication> authentication
