@@ -84,7 +84,7 @@ public class MavenCentralDownloader {
     }
 
     public static void main(String[] args) throws Exception {
-        var u = new MavenCentralDownloader("junit", "junit", "3.8", "./downloads/junit3/");
+        var u = new MavenCentralDownloader("HTTPClient", "HTTPClient", "0.3-3", "./downloads/");
         u.getPOM();
         u.getJar();
     }
