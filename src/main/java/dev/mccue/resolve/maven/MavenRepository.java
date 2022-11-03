@@ -81,6 +81,7 @@ public final class MavenRepository {
     ) {
         this.root = root;
         this.authentication = Optional.empty();
+        this.sbtAttrStub = true; //probably don't need this sbt thing
     }
 
     public MavenRepository(
@@ -151,7 +152,7 @@ public final class MavenRepository {
                 isFirst = false;
             else
                 b.append('/');
-            it.next();
+            b.append(it.next());
         }
 
         return b.toString();
