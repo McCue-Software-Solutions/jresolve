@@ -14,6 +14,7 @@ import dev.mccue.resolve.core.Extension;
 import dev.mccue.resolve.core.Module;
 import dev.mccue.resolve.core.SnapshotVersioning;
 import dev.mccue.resolve.core.Project;
+import dev.mccue.resolve.core.SnapshotVersion;
 import dev.mccue.resolve.core.compatibility.SaxParsingException;
 import dev.mccue.resolve.core.compatibility.Utilities;
 
@@ -43,7 +44,15 @@ public final class MavenRepository {
         Classifier classifier,
         Extension extension
     ) {
-        return Optional.empty();
+        return snapshotVersioning
+            .snapshotVersions()
+            .stream()
+            .filter((SnapshotVersion v) -> {
+                return (v.classifier().equals(classifier) || v.classifier().equals(new Classifier("*"))) && 
+                       (v.extension().equals(extension) || v.extension().equals(new Extension("*")));
+            })
+            .findFirst()
+            .map(v -> v.value());//I think this is right, coursier uses an extra .filter?
     }
 
     private static String dirModuleName(Module module, Boolean sbtAttrStub) {
