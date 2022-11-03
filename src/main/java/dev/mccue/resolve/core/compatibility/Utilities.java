@@ -97,7 +97,7 @@ public final class Utilities {
         return substituteEntities(s);
     }
 
-    private final static class XmlHandler extends DefaultHandler {
+    private final static class XmlHandler extends DefaultHandler { //TODO PomParser -> SaxHandler
         private PomParser handler;
 
         public XmlHandler(PomParser handler) {

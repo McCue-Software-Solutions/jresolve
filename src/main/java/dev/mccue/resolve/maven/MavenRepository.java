@@ -55,7 +55,7 @@ public final class MavenRepository {
         }
     }
 
-    private Project parseRawPomSax(String str) throws SaxParsingException {
+    private static Project parseRawPomSax(String str) throws SaxParsingException {
         try {
             return Utilities.xmlParseSax(str, new PomParser()).project();
         } catch (SaxParsingException e) { throw e;
