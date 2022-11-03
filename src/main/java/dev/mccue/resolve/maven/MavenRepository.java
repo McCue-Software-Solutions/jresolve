@@ -13,6 +13,9 @@ import dev.mccue.resolve.core.Classifier;
 import dev.mccue.resolve.core.Extension;
 import dev.mccue.resolve.core.Module;
 import dev.mccue.resolve.core.SnapshotVersioning;
+import dev.mccue.resolve.core.Project;
+import dev.mccue.resolve.core.compatibility.SaxParsingException;
+import dev.mccue.resolve.core.compatibility.Utilities;
 
 public final class MavenRepository {
     private final String root;
@@ -29,6 +32,7 @@ public final class MavenRepository {
 
     public static String toBaseVersion(String version) {
         switch (version) {
+            //TODO
 
         }
         return version;
@@ -45,10 +49,16 @@ public final class MavenRepository {
     private static String dirModuleName(Module module, Boolean sbtAttrStub) {
         if (sbtAttrStub) {
             var name = module.name().value();
-
             return name;
         } else {
             return module.name().value();
+        }
+    }
+
+    private Project parseRawPomSax(String str) throws SaxParsingException {
+        try {
+            return Utilities.xmlParseSax(str, new PomParser()).project();
+        } catch (SaxParsingException e) { throw e;
         }
     }
 
