@@ -45,11 +45,10 @@ public final class Utilities {
                     assert (!isAlpha);
                     if (s.charAt(i) == ';') {
                         i += 1;
-                        found = Optional.ofNullable(new Tuple2(start, i));
+                        found = Optional.ofNullable(new Tuple2(start, i)); // what is this warning
                     }
                 }
-            }
-            else
+            } else
                 i += 1;
         }
         return found;
@@ -62,7 +61,7 @@ public final class Utilities {
         var i = 0;
         var j = 0;
         while (j < s.length() && j < utf8Bom.length() && s.charAt(i) == utf8Bom.charAt(j)) {
-            j+= 1;
+            j += 1;
         }
 
         if (j == utf8Bom.length()) {
@@ -97,7 +96,7 @@ public final class Utilities {
         return substituteEntities(s);
     }
 
-    private final static class XmlHandler extends DefaultHandler { //TODO PomParser -> SaxHandler
+    private final static class XmlHandler extends DefaultHandler { // TODO PomParser -> SaxHandler
         private PomParser handler;
 
         public XmlHandler(PomParser handler) {
@@ -105,11 +104,10 @@ public final class Utilities {
         }
 
         public void startElement(
-            String uri,
-            String localName,
-            String qName,
-            Attributes attributes
-        ) {
+                String uri,
+                String localName,
+                String qName,
+                Attributes attributes) {
             handler.startElement(uri, localName, qName, attributes);
         }
 
@@ -127,18 +125,24 @@ public final class Utilities {
         spf0.setNamespaceAware(false);
         return spf0;
     }
+
     private static SAXParserFactory spf = setSPF();
 
-    public static PomParser xmlParseSax(String str, PomParser handler) throws SaxParsingException{ //TODO this PomParser thing needs to be fixed
+    public static PomParser xmlParseSax(String str, PomParser handler) throws SaxParsingException { // TODO this
+                                                                                                    // PomParser thing
+                                                                                                    // needs to be fixed
         var str0 = xmlPreprocess(str);
         try {
             var saxParser = spf.newSAXParser();
             var xmlReader = saxParser.getXMLReader();
             xmlReader.setContentHandler(new XmlHandler(handler));
             xmlReader.parse(new InputSource(new CharArrayReader(str0.toCharArray())));
-        } catch (ParserConfigurationException e) { throw new SaxParsingException(e); 
-        } catch (SAXException e) { throw new SaxParsingException(e);
-        } catch (IOException e) { throw new SaxParsingException(e);
+        } catch (ParserConfigurationException e) {
+            throw new SaxParsingException(e);
+        } catch (SAXException e) {
+            throw new SaxParsingException(e);
+        } catch (IOException e) {
+            throw new SaxParsingException(e);
         }
         return handler;
     }
