@@ -23,8 +23,7 @@ public final class MavenRepository {
     private final Optional<Authentication> authentication;
     private boolean sbtAttrStub;
 
-    private static final Pattern SNAPSHOT_TIMESTAMP =
-            Pattern.compile("(.*-)?[0-9]{8}\\.[0-9]{6}-[0-9]+");
+    private static final Pattern SNAPSHOT_TIMESTAMP = Pattern.compile("(.*-)?[0-9]{8}\\.[0-9]{6}-[0-9]+");
 
     public static boolean isSnapshot(String version) {
         return version.endsWith("SNAPSHOT")
@@ -33,26 +32,25 @@ public final class MavenRepository {
 
     public static String toBaseVersion(String version) {
         switch (version) {
-            //TODO
+            // TODO
 
         }
         return version;
     }
 
-    public static Optional<String> mavenVersioning (
-        SnapshotVersioning snapshotVersioning,
-        Classifier classifier,
-        Extension extension
-    ) {
+    public static Optional<String> mavenVersioning(
+            SnapshotVersioning snapshotVersioning,
+            Classifier classifier,
+            Extension extension) {
         return snapshotVersioning
-            .snapshotVersions()
-            .stream()
-            .filter((SnapshotVersion v) -> {
-                return (v.classifier().equals(classifier) || v.classifier().equals(new Classifier("*"))) && 
-                       (v.extension().equals(extension) || v.extension().equals(new Extension("*")));
-            })
-            .findFirst()
-            .map(v -> v.value());//I think this is right, coursier uses an extra .filter?
+                .snapshotVersions()
+                .stream()
+                .filter((SnapshotVersion v) -> {
+                    return (v.classifier().equals(classifier) || v.classifier().equals(new Classifier("*"))) &&
+                            (v.extension().equals(extension) || v.extension().equals(new Extension("*")));
+                })
+                .findFirst()
+                .map(v -> v.value());// I think this is right, coursier uses an extra .filter?
     }
 
     private static String dirModuleName(Module module, Boolean sbtAttrStub) {
@@ -67,53 +65,57 @@ public final class MavenRepository {
     private static Project parseRawPomSax(String str) throws SaxParsingException {
         try {
             return Utilities.xmlParseSax(str, new PomParser()).project();
-        } catch (SaxParsingException e) { throw e;
+        } catch (SaxParsingException e) {
+            throw e;
         }
     }
 
     private static String actualRoot(String root) {
-        if (root.endsWith("/")) 
+        if (root.endsWith("/"))
             return root.substring(0, root.length() - 1);
-        else 
+        else
             return root;
-    }    
+    }
 
     public static MavenRepository apply(String root) {
         return new MavenRepository(actualRoot(root));
     }
+
     public static MavenRepository apply(String root, Optional<Authentication> authentication) {
         return new MavenRepository(root, authentication);
     }
-    
+
     public MavenRepository(
-        String root
-    ) {
+            String root) {
         this.root = root;
         this.authentication = Optional.empty();
-        this.sbtAttrStub = true; //probably don't need this sbt thing
+        this.sbtAttrStub = true; // probably don't need this sbt thing
     }
 
     public MavenRepository(
-        String root,
-        Optional<Authentication> authentication
-    ) {
+            String root,
+            Optional<Authentication> authentication) {
         this.root = root;
         this.authentication = authentication;
         this.sbtAttrStub = true;
     }
 
     public MavenRepository(
-        String root,
-        Optional<Authentication> authentication,
-        boolean sbtAttrStub
-    ) {
+            String root,
+            Optional<Authentication> authentication,
+            boolean sbtAttrStub) {
         this.root = root;
         this.authentication = authentication;
         this.sbtAttrStub = sbtAttrStub;
     }
 
-    public String root() { return this.root; }
-    public Optional<Authentication> authentication() { return this.authentication; }
+    public String root() {
+        return this.root;
+    }
+
+    public Optional<Authentication> authentication() {
+        return this.authentication;
+    }
 
     @Override
     public String toString() {
@@ -122,11 +124,9 @@ public final class MavenRepository {
 
     @Override
     public boolean equals(Object o) {
-        return (this == o) || (
-            o instanceof MavenRepository other &&
-            Objects.equals(this.root, other.root) &&
-            Objects.equals(this.authentication, other.authentication)
-        );
+        return (this == o) || (o instanceof MavenRepository other &&
+                Objects.equals(this.root, other.root) &&
+                Objects.equals(this.authentication, other.authentication));
     }
 
     @Override
@@ -138,7 +138,7 @@ public final class MavenRepository {
         return this;
     }
 
-    private List<String> modulePath(Module module)  {
+    private List<String> modulePath(Module module) {
         var list = Arrays.asList(module.organization().value().split("."));
         list.add(dirModuleName(module, sbtAttrStub));
         return list;
@@ -157,7 +157,7 @@ public final class MavenRepository {
         final var it = path.iterator();
         var isFirst = true;
         while (it.hasNext()) {
-            if (isFirst) 
+            if (isFirst)
                 isFirst = false;
             else
                 b.append('/');
@@ -182,21 +182,19 @@ public final class MavenRepository {
     }
 
     public Artifact projectArtifact(
-        Module module,
-        String version,
-        Optional<String> versioningValue
-    ) {
+            Module module,
+            String version,
+            Optional<String> versioningValue) {
         var path = moduleVersionPath(module, version);
         path.add(String.format("%s-%s.pom", module.name().value(), versioningValue.orElse(version)));
 
         return new Artifact(
-            urlFor(path), 
-            Map.of(), 
-            Map.of(), 
-            false, 
-            false, 
-            authentication);
+                urlFor(path),
+                Map.of(),
+                Map.of(),
+                false,
+                false,
+                authentication);
     }
-
 
 }
