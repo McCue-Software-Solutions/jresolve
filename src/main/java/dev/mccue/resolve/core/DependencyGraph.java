@@ -7,10 +7,10 @@ import java.util.ArrayList;
 
 import static dev.mccue.resolve.core.DependencyGraph.Interdependency.*;
 
-public class DependencyGraph {
+public final class DependencyGraph {
     private final Map<DependencyVertex, List<DependencyVertex>> deps = new HashMap<>();
 
-     public static enum Interdependency {
+     public enum Interdependency {
         TwoSubOfOne,
         OneSubOfTwo,
         NoRelation
