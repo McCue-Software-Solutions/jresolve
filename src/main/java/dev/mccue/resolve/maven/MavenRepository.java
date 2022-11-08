@@ -71,10 +71,11 @@ public final class MavenRepository {
     }
 
     private static String actualRoot(String root) {
-        if (root.endsWith("/"))
+        if (root.endsWith("/")) {
             return root.substring(0, root.length() - 1);
-        else
+        } else {
             return root;
+        }
     }
 
     public static MavenRepository apply(String root) {
@@ -157,10 +158,11 @@ public final class MavenRepository {
         final var it = path.iterator();
         var isFirst = true;
         while (it.hasNext()) {
-            if (isFirst)
+            if (isFirst) {
                 isFirst = false;
-            else
+            } else {
                 b.append('/');
+            }
             b.append(it.next());
         }
 
@@ -174,8 +176,9 @@ public final class MavenRepository {
         final var it = path.iterator();
         while (it.hasNext()) {
             b.append(it.next());
-            if (isDir)
+            if (isDir) {
                 b.append('/');
+            }
         }
 
         return b.toString();
