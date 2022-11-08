@@ -112,11 +112,7 @@ public final class MavenRepository {
 
     @Override
     public int hashCode() {
-        return this.root.hashCode() * this.authentication.hashCode();
-    }
-
-    public MavenRepository withChanging(boolean changing) {
-        return this;
+        return Objects.hash(this.root) * Objects.hash(this.authentication);
     }
 
     private List<String> modulePath(Module module) {

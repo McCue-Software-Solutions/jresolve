@@ -15,8 +15,8 @@ public record Artifact (
         this(url, Map.of(), Map.of(), false, false, Optional.empty());
     }
 
-    public Artifact withChanging(boolean changing) {
-        return new Artifact(this.url, this.checksumUrls, this.extra, changing, this.optional, this.authentication);
+    public Artifact(String url, boolean changing) {
+        this(url, Map.of(), Map.of(), true, false, Optional.empty());
     }
 
     public static Artifact fromUrl(String url) {
@@ -35,7 +35,7 @@ public record Artifact (
             url0 = url;
             changing = false;
         }
-        return new Artifact(url0).withChanging(changing);
+        return new Artifact(url0, changing);
     }
 
     private static String removeSuffix(String s, String suffix) {
