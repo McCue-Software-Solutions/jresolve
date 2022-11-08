@@ -1,6 +1,6 @@
 package dev.mccue.resolve.core.compatibility;
 
-public class SaxParsingException extends Exception {
+public class SaxParsingException extends RuntimeException {
     private String message;
 
     public SaxParsingException(Exception e) {

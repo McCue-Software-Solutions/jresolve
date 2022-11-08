@@ -2,6 +2,7 @@ package dev.mccue.resolve.core.compatibility;
 
 import java.io.CharArrayReader;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.Optional;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -127,9 +128,9 @@ public final class Utilities {
 
     private static SAXParserFactory spf = setSPF();
 
-    public static PomParser xmlParseSax(String str, PomParser handler) throws SaxParsingException { // TODO this
-                                                                                                    // PomParser thing
-                                                                                                    // needs to be fixed
+    public static PomParser xmlParseSax(String str, PomParser handler) { // TODO this
+                                                                         // PomParser thing
+                                                                         // needs to be fixed
         var str0 = xmlPreprocess(str);
         try {
             var saxParser = spf.newSAXParser();
@@ -137,11 +138,11 @@ public final class Utilities {
             xmlReader.setContentHandler(new XmlHandler(handler));
             xmlReader.parse(new InputSource(new CharArrayReader(str0.toCharArray())));
         } catch (ParserConfigurationException e) {
-            throw new SaxParsingException(e);
+            throw new IllegalStateException(e);
         } catch (SAXException e) {
             throw new SaxParsingException(e);
         } catch (IOException e) {
-            throw new SaxParsingException(e);
+            throw new UncheckedIOException(e);
         }
         return handler;
     }

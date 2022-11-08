@@ -53,12 +53,8 @@ public final class MavenRepository {
                 .map(v -> v.value());// I think this is right, coursier uses an extra .filter?
     }
 
-    private static Project parseRawPomSax(String str) throws SaxParsingException {
-        try {
-            return Utilities.xmlParseSax(str, new PomParser()).project();
-        } catch (SaxParsingException e) {
-            throw e;
-        }
+    private static Project parseRawPomSax(String str) {
+        return Utilities.xmlParseSax(str, new PomParser()).project();
     }
 
     private static String actualRoot(String root) {
