@@ -65,24 +65,16 @@ public final class MavenRepository {
         }
     }
 
-    public static MavenRepository apply(String root) {
-        return new MavenRepository(actualRoot(root));
-    }
-
-    public static MavenRepository apply(String root, Optional<Authentication> authentication) {
-        return new MavenRepository(root, authentication);
-    }
-
     public MavenRepository(
             String root) {
-        this.root = root;
+        this.root = actualRoot(root);
         this.authentication = Optional.empty();
     }
 
     public MavenRepository(
             String root,
             Optional<Authentication> authentication) {
-        this.root = root;
+        this.root = actualRoot(root);
         this.authentication = authentication;
     }
 
