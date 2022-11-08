@@ -17,7 +17,9 @@ import org.xml.sax.ContentHandler;
 import dev.mccue.resolve.util.Tuple2;
 
 public final class Utilities {
-    private static String utf8Bom = "\ufeff";
+    private Utilities() {}
+
+    private static final String utf8Bom = "\ufeff";
 
     private static Optional<Tuple2<Integer, Integer>> entityIdxNoFrom(String s) {
         return entityIdx(s, 0);
@@ -43,10 +45,9 @@ public final class Utilities {
                         i += 1;
                 }
                 if (start + 1 < i && i < s.length()) {
-                    assert (!isAlpha);
                     if (s.charAt(i) == ';') {
                         i += 1;
-                        found = Optional.ofNullable(new Tuple2(start, i)); // what is this warning
+                        found = Optional.of(new Tuple2<>(start, i)); // what is this warning
                     }
                 }
             } else
@@ -69,7 +70,7 @@ public final class Utilities {
             i = j;
         }
 
-        Optional<Tuple2<Integer, Integer>> found = Optional.empty();
+        var found = entityIdx(s, i);
         while (found.isPresent()) {
             var from = found.get().first();
             var to = found.get().second();
@@ -93,44 +94,8 @@ public final class Utilities {
         }
     }
 
-    protected static String xmlPreprocess(String s) {
+    public static String xmlPreprocess(String s) {
         return substituteEntities(s);
-    }
-
-    private final static class XmlHandler extends DefaultHandler { // TODO PomParser -> SaxHandler
-        private ContentHandler handler;
-
-        public XmlHandler(ContentHandler handler) {
-            this.handler = handler;
-        }
-
-        public void startElement(
-                String uri,
-                String localName,
-                String qName,
-                Attributes attributes) {
-            try {
-                handler.startElement(uri, localName, qName, attributes);
-            } catch (SAXException e) {
-                throw new SaxParsingException(e);
-            }
-        }
-
-        public void characters(char[] ch, int start, int length) {
-            try {
-                handler.characters(ch, start, length);
-            } catch (SAXException e) {
-                throw new SaxParsingException(e);
-            }
-        }
-
-        public void endElement(String uri, String localName, String qName) {
-            try {
-                handler.endElement(uri, localName, qName);
-            } catch (SAXException e) {
-                throw new SaxParsingException(e);
-            }
-        }
     }
 
     private static SAXParserFactory setSPF() {
@@ -139,24 +104,23 @@ public final class Utilities {
         return spf0;
     }
 
-    private static SAXParserFactory spf = setSPF();
+    private static final SAXParserFactory spf = setSPF();
 
-    public static <T extends ContentHandler> T xmlParseSax(String str, T handler) { // TODO this
-                                                                         // PomParser thing
-                                                                         // needs to be fixed
+    public static <T extends ContentHandler> T xmlParseSax(String str, T handler) {
         var str0 = xmlPreprocess(str);
         try {
             var saxParser = spf.newSAXParser();
             var xmlReader = saxParser.getXMLReader();
-            xmlReader.setContentHandler(new XmlHandler(handler));
+            xmlReader.setContentHandler(handler);
             xmlReader.parse(new InputSource(new CharArrayReader(str0.toCharArray())));
         } catch (ParserConfigurationException e) {
             throw new IllegalStateException(e);
         } catch (SAXException e) {
-            throw new SaxParsingException(e);
+            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
         return handler;
     }
 }
+

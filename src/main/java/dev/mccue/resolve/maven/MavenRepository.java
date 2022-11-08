@@ -44,12 +44,12 @@ public final class MavenRepository {
         return snapshotVersioning
                 .snapshotVersions()
                 .stream()
-                .filter((SnapshotVersion v) -> {
-                    return (v.classifier().equals(classifier) || v.classifier().equals(new Classifier("*"))) &&
-                            (v.extension().equals(extension) || v.extension().equals(new Extension("*")));
-                })
+                .filter((SnapshotVersion v) ->
+                        (v.classifier().equals(classifier) || v.classifier().equals(new Classifier("*"))) &&
+                        (v.extension().equals(extension) || v.extension().equals(new Extension("*"))))
                 .findFirst()
-                .map(v -> v.value());// I think this is right, coursier uses an extra .filter?
+                .map(SnapshotVersion::value)
+                .filter(s -> !s.isEmpty());// I think this is right, coursier uses an extra .filter?
     }
 
     private static Project parseRawPomSax(String str) {
@@ -103,7 +103,7 @@ public final class MavenRepository {
     }
 
     private List<String> modulePath(Module module) {
-        var list = new ArrayList<String>(Arrays.asList(module.organization().value().split(".")));
+        var list = new ArrayList<>(Arrays.asList(module.organization().value().split("\\.")));
         list.add(module.name().value());
         return list;
     }
