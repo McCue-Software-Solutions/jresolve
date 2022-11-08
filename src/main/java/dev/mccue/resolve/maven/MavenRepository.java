@@ -1,5 +1,6 @@
 package dev.mccue.resolve.maven;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,6 @@ import dev.mccue.resolve.core.compatibility.Utilities;
 public final class MavenRepository {
     private final String root;
     private final Optional<Authentication> authentication;
-    private boolean sbtAttrStub;
 
     private static final Pattern SNAPSHOT_TIMESTAMP = Pattern.compile("(.*-)?[0-9]{8}\\.[0-9]{6}-[0-9]+");
 
@@ -53,15 +53,6 @@ public final class MavenRepository {
                 .map(v -> v.value());// I think this is right, coursier uses an extra .filter?
     }
 
-    private static String dirModuleName(Module module, Boolean sbtAttrStub) {
-        if (sbtAttrStub) {
-            var name = module.name().value();
-            return name;
-        } else {
-            return module.name().value();
-        }
-    }
-
     private static Project parseRawPomSax(String str) throws SaxParsingException {
         try {
             return Utilities.xmlParseSax(str, new PomParser()).project();
@@ -90,7 +81,6 @@ public final class MavenRepository {
             String root) {
         this.root = root;
         this.authentication = Optional.empty();
-        this.sbtAttrStub = true; // probably don't need this sbt thing
     }
 
     public MavenRepository(
@@ -98,16 +88,6 @@ public final class MavenRepository {
             Optional<Authentication> authentication) {
         this.root = root;
         this.authentication = authentication;
-        this.sbtAttrStub = true;
-    }
-
-    public MavenRepository(
-            String root,
-            Optional<Authentication> authentication,
-            boolean sbtAttrStub) {
-        this.root = root;
-        this.authentication = authentication;
-        this.sbtAttrStub = sbtAttrStub;
     }
 
     public String root() {
@@ -140,8 +120,8 @@ public final class MavenRepository {
     }
 
     private List<String> modulePath(Module module) {
-        var list = Arrays.asList(module.organization().value().split("."));
-        list.add(dirModuleName(module, sbtAttrStub));
+        var list = new ArrayList<String>(Arrays.asList(module.organization().value().split(".")));
+        list.add(module.name().value());
         return list;
     }
 
