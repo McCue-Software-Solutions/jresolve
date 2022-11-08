@@ -8,7 +8,6 @@ import java.util.Optional;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 
-import dev.mccue.resolve.maven.PomParser;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

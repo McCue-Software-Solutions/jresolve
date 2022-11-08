@@ -16,7 +16,6 @@ import dev.mccue.resolve.core.Module;
 import dev.mccue.resolve.core.SnapshotVersioning;
 import dev.mccue.resolve.core.Project;
 import dev.mccue.resolve.core.SnapshotVersion;
-import dev.mccue.resolve.core.compatibility.SaxParsingException;
 import dev.mccue.resolve.core.compatibility.Utilities;
 
 public final class MavenRepository {
