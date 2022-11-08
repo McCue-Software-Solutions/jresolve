@@ -5,13 +5,16 @@ import dev.mccue.resolve.core.Module;
 import dev.mccue.resolve.util.LL;
 import dev.mccue.resolve.util.Tuple2;
 import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class PomParser extends DefaultHandler { //TODO extends DefaultHandler -> Implements SaxParser
+public final class PomParser implements ContentHandler { //TODO extends DefaultHandler -> Implements SaxParser
     final State state = new State();
     LL<String> paths = new LL.Nil<>();
 
@@ -685,4 +688,52 @@ public final class PomParser extends DefaultHandler { //TODO extends DefaultHand
     public Project project() {
         return this.state.project();
     }
+
+@Override
+public void setDocumentLocator(Locator locator) {
+        // TODO Auto-generated method stub
+        
+}
+
+@Override
+public void startDocument() throws SAXException {
+        // TODO Auto-generated method stub
+        
+}
+
+@Override
+public void endDocument() throws SAXException {
+        // TODO Auto-generated method stub
+        
+}
+
+@Override
+public void startPrefixMapping(String prefix, String uri) throws SAXException {
+        // TODO Auto-generated method stub
+        
+}
+
+@Override
+public void endPrefixMapping(String prefix) throws SAXException {
+        // TODO Auto-generated method stub
+        
+}
+
+@Override
+public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+        // TODO Auto-generated method stub
+        
+}
+
+@Override
+public void processingInstruction(String target, String data) throws SAXException {
+        // TODO Auto-generated method stub
+        
+}
+
+@Override
+public void skippedEntity(String name) throws SAXException {
+        // TODO Auto-generated method stub
+        
+}
 }

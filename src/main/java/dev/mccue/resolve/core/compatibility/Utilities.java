@@ -13,6 +13,8 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+
 import dev.mccue.resolve.util.Tuple2;
 
 public final class Utilities {
@@ -97,9 +99,9 @@ public final class Utilities {
     }
 
     private final static class XmlHandler extends DefaultHandler { // TODO PomParser -> SaxHandler
-        private PomParser handler;
+        private ContentHandler handler;
 
-        public XmlHandler(PomParser handler) {
+        public XmlHandler(ContentHandler handler) {
             this.handler = handler;
         }
 
@@ -108,15 +110,27 @@ public final class Utilities {
                 String localName,
                 String qName,
                 Attributes attributes) {
-            handler.startElement(uri, localName, qName, attributes);
+            try {
+                handler.startElement(uri, localName, qName, attributes);
+            } catch (SAXException e) {
+                throw new SaxParsingException(e);
+            }
         }
 
         public void characters(char[] ch, int start, int length) {
-            handler.characters(ch, start, length);
+            try {
+                handler.characters(ch, start, length);
+            } catch (SAXException e) {
+                throw new SaxParsingException(e);
+            }
         }
 
         public void endElement(String uri, String localName, String qName) {
-            handler.endElement(uri, localName, qName);
+            try {
+                handler.endElement(uri, localName, qName);
+            } catch (SAXException e) {
+                throw new SaxParsingException(e);
+            }
         }
     }
 
@@ -128,7 +142,7 @@ public final class Utilities {
 
     private static SAXParserFactory spf = setSPF();
 
-    public static PomParser xmlParseSax(String str, PomParser handler) { // TODO this
+    public static <T extends ContentHandler> T xmlParseSax(String str, T handler) { // TODO this
                                                                          // PomParser thing
                                                                          // needs to be fixed
         var str0 = xmlPreprocess(str);
