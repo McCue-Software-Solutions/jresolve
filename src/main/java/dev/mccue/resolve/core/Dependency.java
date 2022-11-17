@@ -2,7 +2,6 @@ package dev.mccue.resolve.core;
 
 import dev.mccue.resolve.doc.Coursier;
 import dev.mccue.resolve.doc.Incomplete;
-import dev.mccue.resolve.util.Tuple2;
 
 import java.util.Objects;
 import java.util.Set;
@@ -58,7 +57,7 @@ public record Dependency(
                 module,
                 version,
                 Configuration.EMPTY,
-                MinimizedExclusions.ZERO,
+                MinimizedExclusions.NONE,
                 Publication.EMPTY,
                 false,
                 true
@@ -69,7 +68,7 @@ public record Dependency(
             Module module,
             String version,
             Configuration configuration,
-            Set<Tuple2<Organization, ModuleName>> exclusions,
+            Set<Exclusion> exclusions,
             Attributes attributes,
             boolean optional,
             boolean transitive
