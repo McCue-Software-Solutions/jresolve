@@ -84,4 +84,20 @@ public record Dependency(
                 transitive
         );
     }
+
+    public Dependency withVersion(String version) {
+        return new Dependency(
+                this.module,
+                version,
+                this.configuration,
+                this.minimizedExclusions,
+                this.publication,
+                this.optional,
+                this.transitive
+        );
+    }
+
+    public Tuple2<Module, String> moduleVersion() {
+        return new Tuple2<>(module, version);
+    }
 }
