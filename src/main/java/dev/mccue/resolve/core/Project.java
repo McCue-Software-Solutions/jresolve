@@ -52,4 +52,27 @@ public record Project(
         public Tuple2<Module, String> moduleVersion() {
                 return new Tuple2<>(module, version);
         }
+
+        public Project withProperties(List<Tuple2<String, String>> props) {
+                return new Project(
+                        module,
+                        version,
+                        dependencies,
+                        configurations,
+                        parent,
+                        dependencyManagement,
+                        props,
+                        profiles,
+                        versions,
+                        snapshotVersioning,
+                        packagingOpt,
+                        relocated,
+                        actualVersionOpt,
+                        publications
+                );
+        }
+
+        public String actualVersion() {
+                return actualVersionOpt.orElse(version);
+        }
 }
