@@ -12,22 +12,6 @@ public sealed interface DependencyTree {
         List<Dependency> roots,
         boolean withExclusions
     ) {
-        record Person(String name, int age) {
-        }
-
-        List<Person> persons = new ArrayList<>();
-        persons.sort(Comparator.comparing(Person::age));
-        persons.sort(Comparator.nullsFirst(Comparator.comparing(Person::name)).thenComparing(Comparator.comparing(Person::age)));
-
-        Set<Integer> ages = Set.of();
-
-        persons.stream()
-            .sorted(Comparator.comparing(Person::age))
-            .filter(person -> !ages.contains(person.age))
-            .map(person -> new Object[]{person.age})
-            .toList();
-
-
         List<Dependency> initialRoots;
         if (!roots.isEmpty()) {
             initialRoots = resolution.rootDependencies;
