@@ -7,13 +7,11 @@ import java.util.stream.Collectors;
 
 public sealed interface DependencyTree {
 
-    //TODO roots0 can be optionally null
     static List<DependencyTree> of(
-            Resolution resolution,
-            List<Dependency> roots,
-            boolean withExclusions
+        Resolution resolution,
+        List<Dependency> roots,
+        boolean withExclusions
     ) {
-        //TODO Delete after you write code
         record Person(String name, int age) {
         }
 
@@ -24,27 +22,27 @@ public sealed interface DependencyTree {
         Set<Integer> ages = Set.of();
 
         persons.stream()
-                .sorted(Comparator.comparing(Person::age))
-                .filter(person -> !ages.contains(person.age))
-                .map(person -> new Object[]{person.age})
-                .toList();
+            .sorted(Comparator.comparing(Person::age))
+            .filter(person -> !ages.contains(person.age))
+            .map(person -> new Object[]{person.age})
+            .toList();
 
 
-        List<Dependency> roots0;
+        List<Dependency> initialRoots;
         if (!roots.isEmpty()) {
-            roots0 = resolution.rootDependencies;
+            initialRoots = resolution.rootDependencies;
         } else {
-            roots0 = roots;
+            initialRoots = roots;
         }
 
-        return roots0.stream().<DependencyTree>map(dep -> new Node(dep, false, resolution, withExclusions)).toList();
+        return initialRoots.stream().<DependencyTree>map(dep -> new Node(dep, false, resolution, withExclusions)).toList();
     }
 
     record Node(
-            Dependency dependency,
-            Boolean excluded,
-            Resolution resolution,
-            Boolean withExclusions
+        Dependency dependency,
+        Boolean excluded,
+        Resolution resolution,
+        Boolean withExclusions
     ) implements DependencyTree {
         String reconciledVersion() {
             if (resolution.reconciledVersion.dependency.module() != null) {
@@ -69,26 +67,26 @@ public sealed interface DependencyTree {
                 var dep0 = dependency.withVersion(retainedVersion());
 
                 List<Dependency> dependencies = resolution.dependenciesOf(dep0, false)
-                        .stream()
-                        .sorted(Comparator.comparing((Dependency trDep) ->
-                                trDep.module().organization()).thenComparing(trDep ->
-                                trDep.module().name()).thenComparing(trDep -> trDep.version()))
-                        .collect(Collectors.toList());
+                    .stream()
+                    .sorted(Comparator.comparing((Dependency trDep) ->
+                        trDep.module().organization()).thenComparing(trDep ->
+                        trDep.module().name()).thenComparing(trDep -> trDep.version()))
+                    .collect(Collectors.toList());
 
                 List dependencies0 = dependencies.stream().map(Dependency::moduleVersion).collect(Collectors.toList());
 
-                var excluded = resolution.dependenciesOf(dep0.withExclusions(Collections.emptyList(), false))
-                        .stream()
-                        .sorted(Comparator.comparing((Dependency trDep) ->
-                                trDep.module().organization()).thenComparing(trDep ->
-                                trDep.module().name()).thenComparing(trDep -> trDep.version()))
-                        .filter(trDep ->
-                                !dependencies0.contains(trDep.moduleVersion()))
-                        .map(trDep -> Node.apply(trDep, true, resolution, withExclusions))
-                        .collect(Collectors.toList());
+                var excluded = resolution.dependenciesOf(dep0.withExclusions(List.of(), false))
+                    .stream()
+                    .sorted(Comparator.comparing((Dependency trDep) ->
+                        trDep.module().organization()).thenComparing(trDep ->
+                        trDep.module().name()).thenComparing(trDep -> trDep.version()))
+                    .filter(trDep ->
+                        !dependencies0.contains(trDep.moduleVersion()))
+                    .map(trDep -> Node.apply(trDep, true, resolution, withExclusions))
+                    .collect(Collectors.toList());
 
                 List dependenciesList = dependencies.stream().map(d -> Node.apply(d, false, resolution, withExclusions))
-                        .collect(Collectors.toList());
+                    .collect(Collectors.toList());
 
                 if (withExclusions) {
                     dependenciesList.addAll(excluded);
