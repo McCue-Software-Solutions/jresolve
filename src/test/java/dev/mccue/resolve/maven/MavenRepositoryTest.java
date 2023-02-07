@@ -1,5 +1,6 @@
 package dev.mccue.resolve.maven;
 
+import dev.mccue.resolve.core.Repository;
 import org.junit.jupiter.api.Test;
 
 import dev.mccue.resolve.core.ModuleName;
@@ -42,7 +43,7 @@ public class MavenRepositoryTest {
 
     @Test
     public void testUrlFor() {
-        MavenRepository repo = MavenRepository.apply("repo1.maven.org/maven2/");
+        MavenRepository repo = Repository.central();
         List<String> path = new ArrayList();
         path.add("args4j");
         path.add("args4j");
