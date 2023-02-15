@@ -8,17 +8,13 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.Objects;
 
+import dev.mccue.resolve.core.*;
+import dev.mccue.resolve.core.Module;
 import dev.mccue.resolve.util.Authentication;
 import dev.mccue.resolve.util.Artifact;
-import dev.mccue.resolve.core.Classifier;
-import dev.mccue.resolve.core.Extension;
-import dev.mccue.resolve.core.Module;
-import dev.mccue.resolve.core.SnapshotVersioning;
-import dev.mccue.resolve.core.Project;
-import dev.mccue.resolve.core.SnapshotVersion;
 import dev.mccue.resolve.core.compatibility.Utilities;
 
-public final class MavenRepository {
+public final class MavenRepository implements Repository {
     private final String root;
     private final Optional<Authentication> authentication;
 
