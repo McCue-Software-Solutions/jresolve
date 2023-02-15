@@ -1,6 +1,5 @@
 package dev.mccue.resolve.core;
 
-import dev.mccue.resolve.maven.MavenRepository;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
