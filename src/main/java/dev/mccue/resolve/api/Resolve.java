@@ -23,11 +23,13 @@ public class Resolve {
     }
 
     public Resolution run(ExecutionContext ec) {
+        return new Resolution();
         
     }
 
     public Resolution run() {
         ExecutionContext ec = cache.ec();
+        return new Resolution();
     }
 
   
