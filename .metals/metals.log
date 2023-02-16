@@ -141,3 +141,63 @@ class `Resolve.java` {
 2023.02.14 11:58:15 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
 Feb 14, 2023 3:43:45 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
 WARNING: Unmatched cancel notification for request id 296
+2023.02.14 17:10:24 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+2023.02.14 17:10:25 WARN  Running javac-semanticdb failed for file:///home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java. Output:
+/home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java:11: error: ';' expected
+    public void addDependency(String dep)
+                                         ^
+1 error[0m
+2023.02.14 17:20:06 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+Feb 15, 2023 9:23:28 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 955
+Feb 15, 2023 9:23:34 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 1003
+2023.02.15 21:23:44 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+2023.02.15 21:23:51 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/core/Dependency.java[0m
+2023.02.15 21:25:34 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/core/Dependency.java[0m
+2023.02.15 21:25:49 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/core/Dependency.java[0m
+2023.02.15 21:26:05 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/core/Dependency.java[0m
+2023.02.15 21:26:17 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Repository.java[0m
+2023.02.15 21:26:17 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Repository.java[0m
+2023.02.15 21:28:47 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+Feb 15, 2023 9:41:45 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 2129
+Feb 15, 2023 9:42:21 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 2277
+2023.02.15 21:42:34 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+2023.02.15 21:43:09 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+2023.02.15 21:44:04 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Cache.java[0m
+2023.02.15 21:44:11 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+2023.02.15 21:44:17 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Cache.java[0m
+2023.02.15 21:44:31 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+2023.02.15 21:45:22 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Cache.java[0m
+2023.02.15 21:46:13 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/core/ExecutionContext.java[0m
+2023.02.15 21:46:45 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/core/ExecutionContext.java[0m
+2023.02.15 21:46:45 WARN  Running javac-semanticdb failed for file:///home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/core/ExecutionContext.java. Output:
+/home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/core/ExecutionContext.java:3: error: invalid method declaration; return type required
+    public ExecutioNContext() {}
+           ^
+1 error[0m
+2023.02.15 21:47:28 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Cache.java[0m
+2023.02.15 21:47:28 WARN  Running javac-semanticdb failed for file:///home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Cache.java. Output:
+/home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Cache.java:4: error: invalid method declaration; return type required
+    public ExecutionContext() {
+           ^
+1 error[0m
+2023.02.15 21:47:35 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Cache.java[0m
+2023.02.15 21:47:46 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/core/ExecutionContext.java[0m
+2023.02.15 21:47:49 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/core/ExecutionContext.java[0m
+2023.02.15 21:47:59 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/core/ExecutionContext.java[0m
+Feb 16, 2023 9:46:07 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 2917
+2023.02.16 09:46:18 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Repository.java[0m
+2023.02.16 09:46:49 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+2023.02.16 09:46:57 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/core/ExecutionContext.java[0m
+2023.02.16 09:47:10 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/core/ExecutionContext.java[0m
+2023.02.16 09:47:36 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+2023.02.16 09:47:41 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Cache.java[0m
+2023.02.16 09:47:46 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Cache.java[0m
+2023.02.16 09:48:22 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolution.java[0m
+2023.02.16 09:48:24 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolution.java[0m
+2023.02.16 09:48:40 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolution.java[0m
+2023.02.16 09:48:42 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolution.java[0m

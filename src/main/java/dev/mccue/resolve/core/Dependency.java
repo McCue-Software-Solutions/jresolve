@@ -17,6 +17,12 @@ public record Dependency(
         boolean optional,
         boolean transitive
 ) {
+
+    public static Dependency parse(String dep) {
+        //TOOD somewhere else
+        return new Dependency(null, dep);
+    }
+
     public Dependency(
             Module module,
             String version,
@@ -83,4 +89,5 @@ public record Dependency(
                 transitive
         );
     }
+
 }
