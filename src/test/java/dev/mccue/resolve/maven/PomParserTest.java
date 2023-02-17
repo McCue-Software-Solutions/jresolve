@@ -1,7 +1,7 @@
 package dev.mccue.resolve.maven;
 
 import dev.mccue.resolve.core.*;
-import dev.mccue.resolve.core.Module;
+import dev.mccue.resolve.core.GroupAndArtifact;
 import dev.mccue.resolve.util.Tuple2;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -145,7 +145,7 @@ public final class PomParserTest {
 
         assertEquals(List.of(
                 new Tuple2<>(Configuration.TEST, new Dependency(
-                        new Module(
+                        new GroupAndArtifact(
                                 new Organization("org.junit.jupiter"),
                                 new ModuleName("junit-jupiter-api"),
                                 Map.of()
@@ -153,7 +153,7 @@ public final class PomParserTest {
                         "5.9.0"
                 )),
                 new Tuple2<>(Configuration.TEST, new Dependency(
-                        new Module(
+                        new GroupAndArtifact(
                                 new Organization("org.junit.jupiter"),
                                 new ModuleName("junit-jupiter-params"),
                                 Map.of()

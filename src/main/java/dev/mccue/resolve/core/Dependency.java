@@ -9,7 +9,7 @@ import java.util.Set;
 @Incomplete
 @Coursier("https://github.com/coursier/coursier/blob/f5f0870/modules/core/shared/src/main/scala/coursier/core/Dependency.scala")
 public record Dependency(
-        Module module,
+        GroupAndArtifact module,
         String version,
         Configuration configuration,
         MinimizedExclusions minimizedExclusions,
@@ -17,14 +17,8 @@ public record Dependency(
         boolean optional,
         boolean transitive
 ) {
-
-    public static Dependency parse(String dep) {
-        //TOOD somewhere else
-        return new Dependency(null, dep);
-    }
-
     public Dependency(
-            Module module,
+            GroupAndArtifact module,
             String version,
             Configuration configuration,
             MinimizedExclusions minimizedExclusions,
@@ -56,7 +50,7 @@ public record Dependency(
     }
 
     public Dependency(
-            Module module,
+            GroupAndArtifact module,
             String version
     ) {
         this(
@@ -71,7 +65,7 @@ public record Dependency(
     }
 
     public Dependency(
-            Module module,
+            GroupAndArtifact module,
             String version,
             Configuration configuration,
             Set<Exclusion> exclusions,
@@ -90,4 +84,7 @@ public record Dependency(
         );
     }
 
+    public Dependency(String group, String artifact, String version) {
+        this(new GroupAndArtifact(new Organization(group), new ModuleName(artifact)), version);
+    }
 }

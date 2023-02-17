@@ -1,7 +1,7 @@
 package dev.mccue.resolve.maven;
 
 import dev.mccue.resolve.core.*;
-import dev.mccue.resolve.core.Module;
+import dev.mccue.resolve.core.GroupAndArtifact;
 import dev.mccue.resolve.util.LL;
 import dev.mccue.resolve.util.Tuple2;
 import org.xml.sax.helpers.DefaultHandler;
@@ -24,7 +24,7 @@ public final class PomParser extends DefaultHandler {
 
     // dependencies, dependency, artifactId
     @Override
-    public void startElement(String _uri, String _localName, String tagName, org.xml.sax.Attributes _attributes)  {
+    public void startElement(String _uri, String _localName, String tagName, org.xml.sax.Attributes _attributes) {
         var paths = this.paths.prepend(tagName);
         this.paths = paths;
         var handler = HANDLER_MAP.getOrDefault(
@@ -38,10 +38,8 @@ public final class PomParser extends DefaultHandler {
             switch (handler) {
                 case ContentHandler __ -> {
                 }
-                case SectionHandler s ->
-                        s.start(state);
-                case PropertyHandler p ->
-                        p.name(state, tagName);
+                case SectionHandler s -> s.start(state);
+                case PropertyHandler p -> p.name(state, tagName);
             }
         }
 
@@ -74,12 +72,9 @@ public final class PomParser extends DefaultHandler {
 
         handlerOpt.ifPresent(handler -> {
             switch (handler) {
-                case PropertyHandler p ->
-                        p.content(state, characterBuffer.toString());
-                case ContentHandler c ->
-                        c.content(state, characterBuffer.toString());
-                case SectionHandler s ->
-                        s.end(state);
+                case PropertyHandler p -> p.content(state, characterBuffer.toString());
+                case ContentHandler c -> c.content(state, characterBuffer.toString());
+                case SectionHandler s -> s.end(state);
             }
         });
 
@@ -156,18 +151,17 @@ public final class PomParser extends DefaultHandler {
 
             var properties0 = List.copyOf(properties);
 
-            final Optional<Module> parentModuleOpt;
+            final Optional<GroupAndArtifact> parentModuleOpt;
             {
                 var parentGroupId = parentGroupIdOpt.orElse(null);
                 var parentArtifactId = parentArtifactIdOpt.orElse(null);
                 if (parentGroupId != null && parentArtifactId != null) {
-                    parentModuleOpt = Optional.of(new Module(
+                    parentModuleOpt = Optional.of(new GroupAndArtifact(
                             new Organization(parentGroupId),
                             new ModuleName(parentArtifactId),
                             Map.of()
                     ));
-                }
-                else {
+                } else {
                     parentModuleOpt = Optional.empty();
                 }
             }
@@ -200,10 +194,9 @@ public final class PomParser extends DefaultHandler {
             var extraAttrs = properties0
                     .stream()
                     .filter(pair -> pair.first().equals("extraDependencyAttributes"))
-                    .findFirst()
-                    ;//.orElse(Map.of());
+                    .findFirst();//.orElse(Map.of());
 
-            var projModule = new Module(
+            var projModule = new GroupAndArtifact(
                     new Organization(finalGroupId),
                     new ModuleName(artifactId),
                     Map.of()
@@ -237,6 +230,7 @@ public final class PomParser extends DefaultHandler {
 
     private non-sealed interface SectionHandler extends Handler {
         void start(State state);
+
         void end(State state);
     }
 
@@ -246,6 +240,7 @@ public final class PomParser extends DefaultHandler {
 
     private non-sealed interface PropertyHandler extends Handler {
         void name(State state, String name);
+
         void content(State state, String content);
     }
 
@@ -274,7 +269,7 @@ public final class PomParser extends DefaultHandler {
                     @Override
                     public void end(State state) {
                         var dependency = new Dependency(
-                                new Module(
+                                new GroupAndArtifact(
                                         state.dependencyGroupIdOpt.orElseThrow(() -> new RuntimeException(
                                                 "Expected a groupId on dependency"
                                         )),
@@ -349,10 +344,10 @@ public final class PomParser extends DefaultHandler {
                     @Override
                     public void end(State state) {
                         state.dependencyExclusions.add(
-                               new Exclusion(
-                                       state.dependencyExclusionGroupId,
-                                       state.dependencyExclusionArtifactId
-                               )
+                                new Exclusion(
+                                        state.dependencyExclusionGroupId,
+                                        state.dependencyExclusionArtifactId
+                                )
                         );
                     }
 
@@ -490,7 +485,7 @@ public final class PomParser extends DefaultHandler {
                         state.profileActivationProperties.add(
                                 new Tuple2<>(
                                         state.profilePropertyNameOpt.orElseThrow(() ->
-                                            new RuntimeException("Expected profile property name to be set")
+                                                new RuntimeException("Expected profile property name to be set")
                                         ),
                                         state.profilePropertyValueOpt
                                 )

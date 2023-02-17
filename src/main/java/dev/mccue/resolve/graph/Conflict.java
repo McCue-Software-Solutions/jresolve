@@ -1,6 +1,6 @@
 package dev.mccue.resolve.graph;
 
-import dev.mccue.resolve.core.Module;
+import dev.mccue.resolve.core.GroupAndArtifact;
 import dev.mccue.resolve.doc.Coursier;
 import dev.mccue.resolve.doc.Incomplete;
 
@@ -8,11 +8,11 @@ import dev.mccue.resolve.doc.Incomplete;
 @Incomplete
 @Coursier("https://github.com/coursier/coursier/blob/f5f0870/modules/core/shared/src/main/scala/coursier/graph/Conflict.scala")
 public record Conflict(
-        Module module,
+        GroupAndArtifact module,
         String version,
         String wantedVersion,
         boolean wasExcluded,
-        Module dependeeModule,
+        GroupAndArtifact dependeeModule,
         String dependeeVersion
 ) {
     public record Conflicted(ReverseModuleTree tree) {

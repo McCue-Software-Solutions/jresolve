@@ -12,7 +12,7 @@ import dev.mccue.resolve.util.Authentication;
 import dev.mccue.resolve.util.Artifact;
 import dev.mccue.resolve.core.Classifier;
 import dev.mccue.resolve.core.Extension;
-import dev.mccue.resolve.core.Module;
+import dev.mccue.resolve.core.GroupAndArtifact;
 import dev.mccue.resolve.core.SnapshotVersioning;
 import dev.mccue.resolve.core.Project;
 import dev.mccue.resolve.core.SnapshotVersion;
@@ -46,7 +46,7 @@ public final class MavenRepository {
                 .stream()
                 .filter((SnapshotVersion v) ->
                         (v.classifier().equals(classifier) || v.classifier().equals(new Classifier("*"))) &&
-                        (v.extension().equals(extension) || v.extension().equals(new Extension("*"))))
+                                (v.extension().equals(extension) || v.extension().equals(new Extension("*"))))
                 .findFirst()
                 .map(SnapshotVersion::value)
                 .filter(s -> !s.isEmpty());// I think this is right, coursier uses an extra .filter?
@@ -102,13 +102,13 @@ public final class MavenRepository {
         return Objects.hash(this.root) * Objects.hash(this.authentication);
     }
 
-    private List<String> modulePath(Module module) {
+    private List<String> modulePath(GroupAndArtifact module) {
         var list = new ArrayList<>(Arrays.asList(module.organization().value().split("\\.")));
         list.add(module.name().value());
         return list;
     }
 
-    private List<String> moduleVersionPath(Module module, String version) {
+    private List<String> moduleVersionPath(GroupAndArtifact module, String version) {
         var list = modulePath(module);
         list.add(toBaseVersion(version));
         return list;
@@ -148,7 +148,7 @@ public final class MavenRepository {
     }
 
     public Artifact projectArtifact(
-            Module module,
+            GroupAndArtifact module,
             String version,
             Optional<String> versioningValue) {
         var path = moduleVersionPath(module, version);
