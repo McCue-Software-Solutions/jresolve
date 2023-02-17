@@ -36,7 +36,7 @@ public final class MavenCentralDownloader {
      * Checks the connection for successful 200 response
      *
      */
-    public MavenCentralDownloader(Organization organization, ModuleName moduleName, String version) throws Exception {
+    public MavenCentralDownloader(Organization organization, ModuleName moduleName, String version) {
         this.organization = organization;
         this.moduleName = moduleName;
         this.version = version;

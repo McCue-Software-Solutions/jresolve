@@ -206,3 +206,25 @@ WARNING: Unmatched cancel notification for request id 2917
 Feb 16, 2023 11:02:01 AM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
 WARNING: Unmatched cancel notification for request id 3375
 2023.02.16 11:02:11 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+Feb 17, 2023 11:44:28 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTrace
+2023.02.17 13:26:17 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/core/Artifact.java[0m
+2023.02.17 13:29:06 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+2023.02.17 13:36:40 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+2023.02.17 13:36:40 WARN  Running javac-semanticdb failed for file:///home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java. Output:
+/home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java:32: error: bad initializer for for-loop
+        for (dependency : dependencies) {
+             ^
+1 error[0m
+2023.02.17 13:36:54 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+2023.02.17 13:41:32 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/maven/MavenCentralDownloader.java[0m
+2023.02.17 13:41:55 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+2023.02.17 13:47:42 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+2023.02.17 13:49:33 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/maven/MavenCentralDownloader.java[0m
+2023.02.17 13:53:30 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/core/Classifier.java[0m
+Feb 17, 2023 1:55:15 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 4402
+2023.02.17 13:56:12 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+2023.02.17 13:59:55 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+2023.02.17 14:00:28 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
+2023.02.17 14:00:32 WARN  no build target for: /home/pink/code/jresolve/jresolve/src/main/java/dev/mccue/resolve/api/Resolve.java[0m
