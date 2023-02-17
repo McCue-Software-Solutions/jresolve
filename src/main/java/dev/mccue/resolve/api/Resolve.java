@@ -1,6 +1,8 @@
 package dev.mccue.resolve.api;
 
+import dev.mccue.resolve.core.Classifier;
 import dev.mccue.resolve.core.Dependency;
+import dev.mccue.resolve.core.Extension;
 import dev.mccue.resolve.maven.MavenCentralDownloader;
 
 import java.util.ArrayList;
@@ -8,14 +10,10 @@ import java.util.ArrayList;
 public class Resolve {
     private ArrayList<Dependency> dependencies;
     private ArrayList<Repository> repositories; //unused for now
-    private Cache cache;
 
     public Resolve() {
         dependencies = new ArrayList<>();
-
         repositories = new ArrayList<>();
-        //repositories.add(Repositories.mavenCentral or something like that)
-        //TODO just to get everything working
     }
 
     public Resolve addDependency(Dependency dep) {
@@ -23,20 +21,15 @@ public class Resolve {
         return this;
     }
 
-//    public Resolution run(ExecutionContext ec) { //might not even need this Execution Context stuff TODO
-//        return new Resolution();
-//        
-//    }
-
-    public Resolution run() {
-        //    ExecutionContext ec = cache.ec();
+    public void run() {
         for (Dependency dependency : dependencies) {
-            var downloader = new MavenCentralDownloader(dependency.module().organization(), dependency.module().name(), dependency.version());
-            //downloader.get(".pom", Classifier.EMPTY, TODO path-from-cache);
-            //downloader.get(".jar", Classifier.EMPTY, TODO path-from-cache);
-            //downloader.get(".something else", Classifier.EMPTY, TODO path-from-cache);
+            var downloader = new MavenCentralDownloader();
+            downloader.get(dependency, Extension.POM, Classifier.EMPTY);
+            downloader.get(dependency, Extension.JAR, Classifier.EMPTY);
+            downloader.get(dependency, Extension.JAR, Classifier.SOURCES);
+            downloader.get(dependency, Extension.JAR, Classifier.JAVADOC);
+            downloader.get(dependency, Extension.POM, Classifier.JAVADOC);
         }
-        return new Resolution();
     }
 
     public static void main(String[] args) {

@@ -12,13 +12,11 @@ import java.util.stream.Collectors;
 )
 public record GroupAndArtifact(
         Organization organization,
-        ModuleName name,
-        Map<String, String> attributes
+        ModuleName name
 ) {
     public GroupAndArtifact(
             Organization organization,
-            ModuleName name,
-            Map<String, String> attributes
+            ModuleName name
     ) {
         this.organization = Objects.requireNonNull(
                 organization,
@@ -28,49 +26,10 @@ public record GroupAndArtifact(
                 name,
                 "name must not be null"
         );
-        this.attributes = Map.copyOf(Objects.requireNonNull(
-                attributes,
-                "attributes must not be null"
-        ));
-    }
-
-    public GroupAndArtifact(
-            Organization organization,
-            ModuleName name
-    ) {
-        this(organization, name, Map.of());
-    }
-
-    public GroupAndArtifact trim() {
-        return new GroupAndArtifact(
-                this.organization.map(String::trim),
-                this.name.map(String::trim),
-                this.attributes
-        );
-    }
-
-    public String attributesStr() {
-        return attributes.entrySet()
-                .stream()
-                .sorted(Map.Entry.comparingByKey())
-                .map(entry -> entry.getKey() + "=" + entry.getValue())
-                .collect(Collectors.joining(";"));
-    }
-
-    public String nameWithAttributes() {
-        return name.value() + (attributes.isEmpty() ? "" : (";" + attributesStr()));
-    }
-
-    public String repr() {
-        return organization.value() + ":" + nameWithAttributes();
     }
 
     @Override
     public String toString() {
-        return repr();
-    }
-
-    public String orgName() {
         return organization.value() + ":" + name.value();
     }
 }
