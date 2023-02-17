@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
         value = "https://github.com/coursier/coursier/blob/f5f0870/modules/core/shared/src/main/scala/coursier/core/Definitions.scala#L28-L79",
         details = "Did not translate the lazy hash code or instance caching."
 )
-public record Module(
+public record GroupAndArtifact(
         Organization organization,
         ModuleName name,
         Map<String, String> attributes
 ) {
-    public Module(
+    public GroupAndArtifact(
             Organization organization,
             ModuleName name,
             Map<String, String> attributes
@@ -34,8 +34,15 @@ public record Module(
         ));
     }
 
-    public Module trim() {
-        return new Module(
+    public GroupAndArtifact(
+            Organization organization,
+            ModuleName name
+    ) {
+        this(organization, name, Map.of());
+    }
+
+    public GroupAndArtifact trim() {
+        return new GroupAndArtifact(
                 this.organization.map(String::trim),
                 this.name.map(String::trim),
                 this.attributes

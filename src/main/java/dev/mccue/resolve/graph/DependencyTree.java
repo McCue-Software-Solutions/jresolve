@@ -1,12 +1,13 @@
 package dev.mccue.resolve.graph;
 
+import dev.mccue.resolve.api.Resolution;
 import dev.mccue.resolve.core.Dependency;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public sealed interface DependencyTree {
-
+public interface DependencyTree {
+/*
     static List<DependencyTree> of(
             Resolution resolution,
             List<Dependency> roots,
@@ -82,5 +83,5 @@ public sealed interface DependencyTree {
                 return dependenciesList;
             }
         }
-    }
+    }*/
 }
