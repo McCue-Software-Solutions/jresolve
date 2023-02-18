@@ -30,10 +30,6 @@ public record Type(String value) implements Comparable<Type> {
         return this.value.isEmpty();
     }
 
-    public Type map(Function<String, String> f) {
-        return new Type(f.apply(this.value));
-    }
-
     public Extension asExtension() {
         return new Extension(this.value);
     }

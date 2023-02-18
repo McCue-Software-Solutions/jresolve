@@ -19,10 +19,6 @@ public record Extension(String value) implements Comparable<Extension> {
         return this.value.isEmpty();
     }
 
-    public Extension map(Function<String, String> f) {
-        return new Extension(f.apply(this.value));
-    }
-
     public Type asType() {
         return new Type(this.value);
     }

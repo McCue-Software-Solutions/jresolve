@@ -29,10 +29,6 @@ public record Configuration(String value) implements Comparable<Configuration> {
         return this.value.isEmpty();
     }
 
-    public Configuration map(Function<String, String> f) {
-        return new Configuration(f.apply(this.value));
-    }
-
     @StackOverflow(
             value = "https://stackoverflow.com/a/653416",
             details = """

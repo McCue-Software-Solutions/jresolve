@@ -63,25 +63,6 @@ public final class ClassifierTest {
     }
 
     @Test
-    @DisplayName("Can use map to update the value in a Classifier")
-    public void mapClassifier() {
-        assertEquals(
-                new Classifier("ABC"),
-                new Classifier("abc").map(String::toUpperCase)
-        );
-    }
-
-    @Test
-    @DisplayName("The result of map cannot be null")
-    public void nullMapClassifier() {
-        assertThrows(
-                NullPointerException.class,
-                () -> new Classifier("").map(__ -> null),
-                "Should not be able to return null from map."
-        );
-    }
-
-    @Test
     @DisplayName("Can convert to a Type")
     public void convertToType() {
         assertEquals(
