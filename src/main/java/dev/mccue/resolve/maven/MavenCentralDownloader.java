@@ -35,20 +35,20 @@ public final class MavenCentralDownloader {
      */
     public void get(Dependency dependency, Extension extension, Classifier classifier) {
         try {
-            var organization = dependency.module().organization();
-            var moduleName = dependency.module().name();
+            var groupId = dependency.library().groupId();
+            var artifactId = dependency.library().artifactId();
             var version = dependency.version();
 
-            var organizationUrlFragment = Arrays.stream(organization.value().split("\\."))
+            var groupUrlFragment = Arrays.stream(groupId.value().split("\\."))
                     .map(part -> URLEncoder.encode(part, StandardCharsets.UTF_8))
                     .collect(Collectors.joining("/"));
 
             var dependencyBaseURL = MAVEN_BASE_URL +
-                    organizationUrlFragment + "/" +
-                    URLEncoder.encode(moduleName.value(), StandardCharsets.UTF_8) + "/" +
+                    groupUrlFragment + "/" +
+                    URLEncoder.encode(artifactId.value(), StandardCharsets.UTF_8) + "/" +
                     URLEncoder.encode(version, StandardCharsets.UTF_8) + "/";
 
-            var fileName = moduleName.value()
+            var fileName = artifactId.value()
                     + "-"
                     + version
                     + (classifier.isEmpty() ? "" : "-" + classifier.value())

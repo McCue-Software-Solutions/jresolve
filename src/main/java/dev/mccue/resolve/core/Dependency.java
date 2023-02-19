@@ -9,7 +9,7 @@ import java.util.Set;
 @Incomplete
 @Coursier("https://github.com/coursier/coursier/blob/f5f0870/modules/core/shared/src/main/scala/coursier/core/Dependency.scala")
 public record Dependency(
-        GroupAndArtifact module,
+        Library library,
         String version,
         Configuration configuration,
         MinimizedExclusions minimizedExclusions,
@@ -18,7 +18,7 @@ public record Dependency(
         boolean transitive
 ) {
     public Dependency(
-            GroupAndArtifact module,
+            Library library,
             String version,
             Configuration configuration,
             MinimizedExclusions minimizedExclusions,
@@ -26,9 +26,9 @@ public record Dependency(
             boolean optional,
             boolean transitive
     ) {
-        this.module = Objects.requireNonNull(
-                module,
-                "module must not be null");
+        this.library = Objects.requireNonNull(
+                library,
+                "library must not be null");
         this.version = Objects.requireNonNull(
                 version,
                 "version must not be null"
@@ -50,11 +50,11 @@ public record Dependency(
     }
 
     public Dependency(
-            GroupAndArtifact module,
+            Library library,
             String version
     ) {
         this(
-                module,
+                library,
                 version,
                 Configuration.EMPTY,
                 MinimizedExclusions.NONE,
@@ -65,7 +65,7 @@ public record Dependency(
     }
 
     public Dependency(
-            GroupAndArtifact module,
+            Library library,
             String version,
             Configuration configuration,
             Set<Exclusion> exclusions,
@@ -74,7 +74,7 @@ public record Dependency(
             boolean transitive
     ) {
         this(
-                module,
+                library,
                 version,
                 configuration,
                 MinimizedExclusions.of(exclusions),
@@ -85,6 +85,6 @@ public record Dependency(
     }
 
     public Dependency(String group, String artifact, String version) {
-        this(new GroupAndArtifact(new Organization(group), new ModuleName(artifact)), version);
+        this(new Library(new GroupId(group), new ArtifactId(artifact)), version);
     }
 }
