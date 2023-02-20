@@ -6,18 +6,18 @@ import java.util.Objects;
 import java.util.function.Function;
 
 @Coursier("https://github.com/coursier/coursier/blob/f5f0870/modules/core/shared/src/main/scala/coursier/core/Definitions.scala#L8-L9")
-public record Organization(String value) implements Comparable<Organization> {
-    public static Organization ALL = new Organization("*");
-    public Organization {
+public record GroupId(String value) implements Comparable<GroupId> {
+    public static GroupId ALL = new GroupId("*");
+    public GroupId {
         Objects.requireNonNull(value, "value must not be null");
     }
 
-    public Organization map(Function<String, String> f) {
-        return new Organization(f.apply(this.value));
+    public GroupId map(Function<String, String> f) {
+        return new GroupId(f.apply(this.value));
     }
 
     @Override
-    public int compareTo(Organization o) {
+    public int compareTo(GroupId o) {
         return this.value.compareTo(o.value);
     }
 }

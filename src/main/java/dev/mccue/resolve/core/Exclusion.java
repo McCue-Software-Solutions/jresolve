@@ -3,13 +3,13 @@ package dev.mccue.resolve.core;
 import java.util.Objects;
 
 public record Exclusion(
-        Organization organization,
-        ModuleName moduleName
+        GroupId groupId,
+        ArtifactId artifactId
 ) {
-    public static final Exclusion ALL = new Exclusion(Organization.ALL, ModuleName.ALL);
+    public static final Exclusion ALL = new Exclusion(GroupId.ALL, ArtifactId.ALL);
 
     public Exclusion {
-        Objects.requireNonNull(organization, "organization must not be null");
-        Objects.requireNonNull(moduleName, "moduleName must not be null");
+        Objects.requireNonNull(groupId, "organization must not be null");
+        Objects.requireNonNull(artifactId, "moduleName must not be null");
     }
 }

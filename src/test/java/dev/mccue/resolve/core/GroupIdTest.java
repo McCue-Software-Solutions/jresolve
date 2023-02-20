@@ -10,35 +10,35 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public final class OrganizationTest {
+public final class GroupIdTest {
     @Test
     @DisplayName("Organization doesn't transform value")
     public void emptyModuleNameHasEmptyValue() {
-        assertEquals("abc", new Organization("abc").value());
-        assertEquals("ABC", new Organization("ABC").value());
+        assertEquals("abc", new GroupId("abc").value());
+        assertEquals("ABC", new GroupId("ABC").value());
     }
 
     @Test
     @DisplayName("Organizations are lexicographically sortable")
     public void organizationsAreSortableByValue() {
         var organizations = new ArrayList<>(List.of(
-                new Organization("f"),
-                new Organization("e"),
-                new Organization("a"),
-                new Organization("b"),
-                new Organization("d"),
-                new Organization("c")
+                new GroupId("f"),
+                new GroupId("e"),
+                new GroupId("a"),
+                new GroupId("b"),
+                new GroupId("d"),
+                new GroupId("c")
         ));
 
         Collections.sort(organizations);
 
         assertEquals(List.of(
-                new Organization("a"),
-                new Organization("b"),
-                new Organization("c"),
-                new Organization("d"),
-                new Organization("e"),
-                new Organization("f")
+                new GroupId("a"),
+                new GroupId("b"),
+                new GroupId("c"),
+                new GroupId("d"),
+                new GroupId("e"),
+                new GroupId("f")
         ), organizations);
     }
 
@@ -47,7 +47,7 @@ public final class OrganizationTest {
     public void cantMakeNullValuedModuleName() {
         assertThrows(
                 NullPointerException.class,
-                () -> new Organization(null),
+                () -> new GroupId(null),
                 "Should not be able to make a Organization with a null value."
         );
     }
@@ -57,8 +57,8 @@ public final class OrganizationTest {
     @DisplayName("Can use map to update the value in a Organization")
     public void mapType() {
         assertEquals(
-                new Organization("ABC"),
-                new Organization("abc").map(String::toUpperCase)
+                new GroupId("ABC"),
+                new GroupId("abc").map(String::toUpperCase)
         );
     }
 
@@ -67,7 +67,7 @@ public final class OrganizationTest {
     public void nullMapType() {
         assertThrows(
                 NullPointerException.class,
-                () -> new Organization("").map(__ -> null),
+                () -> new GroupId("").map(__ -> null),
                 "Should not be able to return null from map."
         );
     }
