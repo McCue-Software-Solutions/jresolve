@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.regex.Pattern;
 
 public final class PomParser extends DefaultHandler {
     final State state = new State();
@@ -97,7 +98,7 @@ public final class PomParser extends DefaultHandler {
         final ArrayList<Tuple2<Configuration, Dependency>> dependencies = new ArrayList<>();
         final ArrayList<Tuple2<Configuration, Dependency>> dependencyManagement = new ArrayList<>();
 
-        final ArrayList<Tuple2<String, String>> properties = new ArrayList<>();
+        final HashMap<String, String> properties = new HashMap<>();
 
         Optional<GroupId> relocationGroupIdOpt = Optional.empty();
         Optional<ArtifactId> relocationArtifactIdOpt = Optional.empty();
@@ -149,7 +150,7 @@ public final class PomParser extends DefaultHandler {
                 versionOpt = Optional.of(parentVersion).filter(s -> !s.isEmpty());
             }
 
-            var properties0 = List.copyOf(properties);
+            var properties0 = Map.copyOf(properties);
 
             final Optional<Library> parentModuleOpt;
             {
@@ -180,9 +181,9 @@ public final class PomParser extends DefaultHandler {
 
 
             // TODO
-            for (var entry : properties0) {
-                if ("extraDependencyAttributes".equals(entry.first())) {
-                    var s = entry.second();
+            for (var entry : properties0.entrySet()) {
+                if ("extraDependencyAttributes".equals(entry.getKey())) {
+                    var s = entry.getValue();
                 }
             }
 
@@ -191,8 +192,9 @@ public final class PomParser extends DefaultHandler {
             ));
 
             var extraAttrs = properties0
+                    .entrySet()
                     .stream()
-                    .filter(pair -> pair.first().equals("extraDependencyAttributes"))
+                    .filter(pair -> pair.getKey().equals("extraDependencyAttributes"))
                     .findFirst();//.orElse(Map.of());
 
             var projModule = new Library(
@@ -308,8 +310,20 @@ public final class PomParser extends DefaultHandler {
                 ),
                 content(
                         new LL.Cons<>("version", prefix),
-                        (state, content) ->
-                                state.dependencyVersion = content
+                        (state, content) -> {
+                                final var matcher = Pattern.compile("\\$\\{(.*?)\\}").matcher(content);
+                                if (matcher.find()) {
+                                        final var variable = matcher.group(1);
+                                        if (state.properties.containsKey(variable) { //if matcher group 1 is the key
+                                                state.dependencyVersion = state.properties.get(variable);//value
+
+                                        } else {
+                                                //throw some sort of error
+                                        }
+                                } else {
+                                        state.dependencyVersion = content;
+                                }
+                        }
                 ),
                 content(
                         new LL.Cons<>("optional", prefix),
@@ -659,7 +673,7 @@ public final class PomParser extends DefaultHandler {
         handlers.addAll(propertyHandlers(
                 LL.fromJavaList(List.of("properties", "project")),
                 (state, key, value) ->
-                        state.properties.add(new Tuple2<>(key, value))
+                        state.properties.put(key, value)
         ));
 
         handlers.addAll(profileHandlers(
