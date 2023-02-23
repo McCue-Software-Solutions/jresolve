@@ -13,6 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -23,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
@@ -42,19 +44,58 @@ public class Resolve {
         return this;
     }
 
-    public void run() {
+    public void run() throws IOException, ParserConfigurationException, InterruptedException, SAXException {
+        recursiveAddDependencies(dependencies);
+
+
         for (Dependency dependency : dependencies) {
             var downloader = new MavenCentralDownloader();
-            downloader.get(dependency, Extension.POM, Classifier.EMPTY);
-            downloader.get(dependency, Extension.JAR, Classifier.EMPTY);
-            downloader.get(dependency, Extension.JAR, Classifier.SOURCES);
-            downloader.get(dependency, Extension.JAR, Classifier.JAVADOC);
-            downloader.get(dependency, Extension.POM, Classifier.JAVADOC);
+            try {
+                downloader.get(dependency, Extension.POM, Classifier.EMPTY);
+            } catch (UncheckedIOException e) {
+            }
+            try {
+                downloader.get(dependency, Extension.JAR, Classifier.EMPTY);
+            } catch (UncheckedIOException e) {
+            }
+            try {
+                downloader.get(dependency, Extension.JAR, Classifier.SOURCES);
+            } catch (UncheckedIOException e) {
+            }
+            try {
+                downloader.get(dependency, Extension.JAR, Classifier.JAVADOC);
+            } catch (UncheckedIOException e) {
+            }
+            try {
+                downloader.get(dependency, Extension.POM, Classifier.JAVADOC);
+            } catch (UncheckedIOException e) {
+            }
         }
     }
 
-    private ArrayList<Dependency> getDependentPoms(int i) throws IOException, InterruptedException, SAXException, ParserConfigurationException {
-        var dependency = dependencies.get(i);
+    private void recursiveAddDependencies(ArrayList<Dependency> recursiveDependencies) throws IOException, ParserConfigurationException, InterruptedException, SAXException {
+        var newDependencies = new ArrayList<Dependency>();
+        for (Dependency dep : recursiveDependencies) {
+            var pulledDependencies = getDependentPoms(dep);
+            for (Dependency found : pulledDependencies) {
+                var alreadySeen = dependencies.stream()
+                        .anyMatch(dependency1 ->
+                                dependency1.library().equals(found.library()) &&
+                                        dependency1.version().equals(found.version())
+                        );
+                if (!alreadySeen) {
+                    newDependencies.add(found);
+                }
+            }
+        }
+        dependencies.addAll(newDependencies);
+
+        if (!newDependencies.isEmpty()) {
+            recursiveAddDependencies(newDependencies);
+        }
+    }
+
+    private ArrayList<Dependency> getDependentPoms(Dependency dependency) throws IOException, InterruptedException, SAXException, ParserConfigurationException {
         var groupId = dependency.library().groupId();
         var artifactId = dependency.library().artifactId();
         var version = dependency.version();
@@ -72,7 +113,6 @@ public class Resolve {
                 + "-"
                 + version
                 + "." + Extension.POM.value();
-        System.out.println(fileName);
 
         var client = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_1_1)
@@ -81,8 +121,6 @@ public class Resolve {
                 .build();
 
         var uri = URI.create(dependencyBaseURL + fileName);
-
-        System.out.println(uri);
 
         var headRequest = HttpRequest.newBuilder()
                 .uri(uri)
@@ -97,28 +135,29 @@ public class Resolve {
                 .uri(uri)
                 .build();
 
-        var response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+        var response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
 
 
         var pom = new PomParser();
         var factory = SAXParserFactory.newDefaultInstance();
         var saxParser = factory.newSAXParser();
-        saxParser.parse(new ByteArrayInputStream(response.body()), pom);
+        saxParser.parse(response.body(), pom);
 
         var project = pom.project();
+
+        var foundDependencies = new ArrayList<Dependency>();
         for (Tuple2<Configuration, Dependency> dep : project.dependencies()) {
             if (dep.first() == Configuration.EMPTY) {
-                System.out.println(dep.second());
+                foundDependencies.add(dep.second());
             }
         }
-        return null;
+        return foundDependencies;
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ParserConfigurationException, SAXException {
         var r = new Resolve()
                 .addDependency(new Dependency("org.clojure", "clojure", "1.11.0"));
-//        r.run();
-        r.getDependentPoms(0);
+        r.run();
     }
 
 }
