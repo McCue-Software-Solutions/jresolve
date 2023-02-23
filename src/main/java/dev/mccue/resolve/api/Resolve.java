@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Collector;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -34,21 +34,22 @@ public class Resolve {
 
     private static final String MAVEN_BASE_URL = "https://repo.maven.apache.org/maven2/";
 
-    public Resolve() {
-        dependencies = new ArrayList<>();
+    public Resolve(List<Dependency> dependencies) {
+        this.dependencies = new ArrayList<>(dependencies);
         repositories = new ArrayList<>();
     }
 
-    public Resolve addDependency(Dependency dep) {
-        dependencies.add(dep);
-        return this;
-    }
+//    public Resolve addDependency(Dependency dep) {
+//        dependencies.add(dep);
+//        return this;
+//    }
 
     public void run() throws IOException, ParserConfigurationException, InterruptedException, SAXException {
-        recursiveAddDependencies(dependencies);
-
-
+        for (var dep : new ArrayList<>(dependencies)) {
+            getDependenciesRecursive(dep);
+        }
         for (Dependency dependency : dependencies) {
+            System.out.println(dependency);
             var downloader = new MavenCentralDownloader();
             try {
                 downloader.get(dependency, Extension.POM, Classifier.EMPTY);
@@ -73,25 +74,17 @@ public class Resolve {
         }
     }
 
-    private void recursiveAddDependencies(ArrayList<Dependency> recursiveDependencies) throws IOException, ParserConfigurationException, InterruptedException, SAXException {
-        var newDependencies = new ArrayList<Dependency>();
-        for (Dependency dep : recursiveDependencies) {
-            var pulledDependencies = getDependentPoms(dep);
-            for (Dependency found : pulledDependencies) {
-                var alreadySeen = dependencies.stream()
-                        .anyMatch(dependency1 ->
-                                dependency1.library().equals(found.library()) &&
-                                        dependency1.version().equals(found.version())
-                        );
-                if (!alreadySeen) {
-                    newDependencies.add(found);
-                }
+    private void getDependenciesRecursive(Dependency dep) throws IOException, ParserConfigurationException, InterruptedException, SAXException {
+        for (var subDep : getDependentPoms(dep)) {
+            var alreadySeen = dependencies.stream().anyMatch(dependency1 ->
+                    dependency1.library().equals(subDep.library()) &&
+                    dependency1.version().equals(subDep.version())
+                );
+            if (alreadySeen) {
+                continue;
             }
-        }
-        dependencies.addAll(newDependencies);
-
-        if (!newDependencies.isEmpty()) {
-            recursiveAddDependencies(newDependencies);
+            dependencies.add(subDep);
+            getDependenciesRecursive(subDep);
         }
     }
 
@@ -155,8 +148,7 @@ public class Resolve {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ParserConfigurationException, SAXException {
-        var r = new Resolve()
-                .addDependency(new Dependency("org.clojure", "clojure", "1.11.0"));
+        var r = new Resolve(List.of(new Dependency("org.clojure", "clojure", "1.11.0")));
         r.run();
     }
 
