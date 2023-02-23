@@ -47,33 +47,15 @@ public class Resolve {
     public void run() throws IOException, ParserConfigurationException, InterruptedException, SAXException {
         recursiveAddDependencies(dependencies);
 
-
         for (Dependency dependency : dependencies) {
             var downloader = new MavenCentralDownloader();
-            try {
-                downloader.get(dependency, Extension.POM, Classifier.EMPTY);
-            } catch (UncheckedIOException e) {
-            }
-            try {
-                downloader.get(dependency, Extension.JAR, Classifier.EMPTY);
-            } catch (UncheckedIOException e) {
-            }
-            try {
-                downloader.get(dependency, Extension.JAR, Classifier.SOURCES);
-            } catch (UncheckedIOException e) {
-            }
-            try {
-                downloader.get(dependency, Extension.JAR, Classifier.JAVADOC);
-            } catch (UncheckedIOException e) {
-            }
-            try {
-                downloader.get(dependency, Extension.POM, Classifier.JAVADOC);
-            } catch (UncheckedIOException e) {
-            }
+            downloader.get(dependency, Extension.POM, Classifier.EMPTY);
+            downloader.get(dependency, Extension.JAR, Classifier.EMPTY);
+
         }
     }
 
-    private void recursiveAddDependencies(ArrayList<Dependency> recursiveDependencies) throws IOException, ParserConfigurationException, InterruptedException, SAXException {
+    private void recursiveAddDependencies(ArrayList<Dependency> recursiveDependencies) throws IOException, InterruptedException, SAXException {
         var newDependencies = new ArrayList<Dependency>();
         for (Dependency dep : recursiveDependencies) {
             var pulledDependencies = getDependentPoms(dep);
@@ -95,7 +77,7 @@ public class Resolve {
         }
     }
 
-    private ArrayList<Dependency> getDependentPoms(Dependency dependency) throws IOException, InterruptedException, SAXException, ParserConfigurationException {
+    private ArrayList<Dependency> getDependentPoms(Dependency dependency) throws IOException, InterruptedException, SAXException {
         var groupId = dependency.library().groupId();
         var artifactId = dependency.library().artifactId();
         var version = dependency.version();
@@ -140,8 +122,13 @@ public class Resolve {
 
         var pom = new PomParser();
         var factory = SAXParserFactory.newDefaultInstance();
-        var saxParser = factory.newSAXParser();
-        saxParser.parse(response.body(), pom);
+
+        try {
+            var saxParser = factory.newSAXParser();
+            saxParser.parse(response.body(), pom);
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
+        }
 
         var project = pom.project();
 
