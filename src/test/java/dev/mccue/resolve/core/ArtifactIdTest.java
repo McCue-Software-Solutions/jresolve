@@ -10,35 +10,35 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public final class ModuleNameTest {
+public final class ArtifactIdTest {
     @Test
-    @DisplayName("Module name doesn't transform value")
+    @DisplayName("Module artifactId doesn't transform value")
     public void emptyModuleNameHasEmptyValue() {
-        assertEquals("abc", new ModuleName("abc").value());
-        assertEquals("ABC", new ModuleName("ABC").value());
+        assertEquals("abc", new ArtifactId("abc").value());
+        assertEquals("ABC", new ArtifactId("ABC").value());
     }
 
     @Test
     @DisplayName("ModuleNames are lexicographically sortable")
     public void moduleNamesAreSortableByValue() {
         var moduleNames = new ArrayList<>(List.of(
-                new ModuleName("f"),
-                new ModuleName("e"),
-                new ModuleName("a"),
-                new ModuleName("b"),
-                new ModuleName("d"),
-                new ModuleName("c")
+                new ArtifactId("f"),
+                new ArtifactId("e"),
+                new ArtifactId("a"),
+                new ArtifactId("b"),
+                new ArtifactId("d"),
+                new ArtifactId("c")
         ));
 
         Collections.sort(moduleNames);
 
         assertEquals(List.of(
-                new ModuleName("a"),
-                new ModuleName("b"),
-                new ModuleName("c"),
-                new ModuleName("d"),
-                new ModuleName("e"),
-                new ModuleName("f")
+                new ArtifactId("a"),
+                new ArtifactId("b"),
+                new ArtifactId("c"),
+                new ArtifactId("d"),
+                new ArtifactId("e"),
+                new ArtifactId("f")
         ), moduleNames);
     }
 
@@ -47,7 +47,7 @@ public final class ModuleNameTest {
     public void cantMakeNullValuedModuleName() {
         assertThrows(
                 NullPointerException.class,
-                () -> new ModuleName(null),
+                () -> new ArtifactId(null),
                 "Should not be able to make a ModuleName with a null value."
         );
     }
@@ -57,8 +57,8 @@ public final class ModuleNameTest {
     @DisplayName("Can use map to update the value in a ModuleName")
     public void mapType() {
         assertEquals(
-                new ModuleName("ABC"),
-                new ModuleName("abc").map(String::toUpperCase)
+                new ArtifactId("ABC"),
+                new ArtifactId("abc").map(String::toUpperCase)
         );
     }
 
@@ -67,7 +67,7 @@ public final class ModuleNameTest {
     public void nullMapType() {
         assertThrows(
                 NullPointerException.class,
-                () -> new ModuleName("").map(__ -> null),
+                () -> new ArtifactId("").map(__ -> null),
                 "Should not be able to return null from map."
         );
     }

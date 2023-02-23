@@ -63,25 +63,6 @@ public final class ConfigurationTest {
     }
 
     @Test
-    @DisplayName("Can use map to update the value in a Configuration")
-    public void mapConfiguration() {
-        assertEquals(
-                new Configuration("ABC"),
-                new Configuration("abc").map(String::toUpperCase)
-        );
-    }
-
-    @Test
-    @DisplayName("The result of map cannot be null")
-    public void nullMapConfiguration() {
-        assertThrows(
-                NullPointerException.class,
-                () -> new Configuration("").map(__ -> null),
-                "Should not be able to return null from map."
-        );
-    }
-
-    @Test
     @DisplayName("withMappedChildElement will join values with ->")
     public void testWithMappedChildElement() {
         assertEquals(

@@ -20,10 +20,6 @@ public record Classifier(String value) implements Comparable<Classifier> {
         return this.value.isEmpty();
     }
 
-    public Classifier map(Function<String, String> f) {
-        return new Classifier(f.apply(this.value));
-    }
-
     public Type asType() {
         return new Type(this.value);
     }

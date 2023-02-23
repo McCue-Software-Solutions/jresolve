@@ -12,7 +12,7 @@ import java.util.OptionalInt;
 @Coursier("https://github.com/coursier/coursier/blob/f5f0870/modules/core/shared/src/main/scala/coursier/core/Definitions.scala#L366-L377")
 @MavenSpecific
 public record SnapshotVersioning(
-        Module module,
+        Library module,
         String version,
         String latest,
         String release,

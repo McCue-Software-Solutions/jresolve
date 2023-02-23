@@ -12,7 +12,7 @@ import java.util.Optional;
 @Incomplete
 @Coursier("https://github.com/coursier/coursier/blob/f5f0870/modules/core/shared/src/main/scala/coursier/core/Definitions.scala#L228-L268")
 public record Project(
-        Module module,
+        Library module,
         String version,
 
         List<Tuple2<Configuration, Dependency>> dependencies,
@@ -20,7 +20,7 @@ public record Project(
         Map<Configuration, List<Configuration>> configurations,
 
         @MavenSpecific
-        Optional<Tuple2<Module, String>> parent,
+        Optional<Tuple2<Library, String>> parent,
 
         @MavenSpecific
         List<Tuple2<Configuration, Dependency>> dependencyManagement,
@@ -49,7 +49,7 @@ public record Project(
         @MavenSpecific
         List<Tuple2<Configuration, Publication>> publications
 ) {
-        public Tuple2<Module, String> moduleVersion() {
-                return new Tuple2<>(module, version);
-        }
+    public Tuple2<Library, String> moduleVersion() {
+        return new Tuple2<>(module, version);
+    }
 }

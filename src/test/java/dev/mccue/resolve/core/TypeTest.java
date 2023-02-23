@@ -63,25 +63,6 @@ public final class TypeTest {
     }
 
     @Test
-    @DisplayName("Can use map to update the value in a Type")
-    public void mapType() {
-        assertEquals(
-                new Type("ABC"),
-                new Type("abc").map(String::toUpperCase)
-        );
-    }
-
-    @Test
-    @DisplayName("The result of map cannot be null")
-    public void nullMapType() {
-        assertThrows(
-                NullPointerException.class,
-                () -> new Type("").map(__ -> null),
-                "Should not be able to return null from map."
-        );
-    }
-
-    @Test
     @DisplayName("Can convert to an Extension")
     public void convertToExtension() {
         assertEquals(

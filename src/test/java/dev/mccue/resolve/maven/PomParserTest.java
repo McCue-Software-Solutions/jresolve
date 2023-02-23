@@ -1,7 +1,7 @@
 package dev.mccue.resolve.maven;
 
 import dev.mccue.resolve.core.*;
-import dev.mccue.resolve.core.Module;
+import dev.mccue.resolve.core.Library;
 import dev.mccue.resolve.util.Tuple2;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
@@ -13,7 +13,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -137,26 +136,24 @@ public final class PomParserTest {
 
         var project = pomParser.project();
 
-        assertEquals(new Organization("dev.mccue"), project.module().organization());
-        assertEquals(new ModuleName("resolve"), project.module().name());
+        assertEquals(new GroupId("dev.mccue"), project.module().groupId());
+        assertEquals(new ArtifactId("resolve"), project.module().artifactId());
         assertEquals("0.0.1", project.version());
         assertEquals(List.of(new Tuple2<>("project.build.sourceEncoding", "UTF-8")), project.properties());
         assertEquals(Optional.of(Type.JAR), project.packagingOpt());
 
         assertEquals(List.of(
                 new Tuple2<>(Configuration.TEST, new Dependency(
-                        new Module(
-                                new Organization("org.junit.jupiter"),
-                                new ModuleName("junit-jupiter-api"),
-                                Map.of()
+                        new Library(
+                                new GroupId("org.junit.jupiter"),
+                                new ArtifactId("junit-jupiter-api")
                         ),
                         "5.9.0"
                 )),
                 new Tuple2<>(Configuration.TEST, new Dependency(
-                        new Module(
-                                new Organization("org.junit.jupiter"),
-                                new ModuleName("junit-jupiter-params"),
-                                Map.of()
+                        new Library(
+                                new GroupId("org.junit.jupiter"),
+                                new ArtifactId("junit-jupiter-params")
                         ),
                         "5.9.0"
                 ))
