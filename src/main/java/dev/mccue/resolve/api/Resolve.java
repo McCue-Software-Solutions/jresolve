@@ -34,10 +34,15 @@ public class Resolve {
 
     private static final String MAVEN_BASE_URL = "https://repo.maven.apache.org/maven2/";
 
-    public Resolve(Dependency... dependencies) {
-        this.dependencies = new ArrayList<>(List.of(dependencies));
+    public Resolve(List<Dependency> dependencies) {
+        this.dependencies = new ArrayList<>(dependencies);
         repositories = new ArrayList<>();
     }
+
+//    public Resolve addDependency(Dependency dep) {
+//        dependencies.add(dep);
+//        return this;
+//    }
 
     public void run() throws IOException, ParserConfigurationException, InterruptedException, SAXException {
         for (var dep : new ArrayList<>(dependencies)) {
@@ -143,7 +148,7 @@ public class Resolve {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ParserConfigurationException, SAXException {
-        var r = new Resolve(new Dependency("org.clojure", "clojure", "1.11.0"));
+        var r = new Resolve(List.of(new Dependency("org.clojure", "clojure", "1.11.0")));
         r.run();
     }
 
