@@ -58,8 +58,7 @@ public class Resolve {
     private void recursiveAddDependencies(ArrayList<Dependency> recursiveDependencies) throws IOException, InterruptedException, SAXException {
         var newDependencies = new ArrayList<Dependency>();
         for (Dependency dep : recursiveDependencies) {
-            var pulledDependencies = getDependentPoms(dep);
-            for (Dependency found : pulledDependencies) {
+            for (Dependency found : getDependentPoms(dep)) {
                 var alreadySeen = dependencies.stream()
                         .anyMatch(dependency1 ->
                                 dependency1.library().equals(found.library()) &&
