@@ -12,7 +12,9 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -140,7 +142,7 @@ public final class PomParserTest {
         assertEquals(new GroupId("dev.mccue"), project.module().groupId());
         assertEquals(new ArtifactId("resolve"), project.module().artifactId());
         assertEquals("0.0.1", project.version());
-        assertEquals(List.of(new Tuple2<>("project.build.sourceEncoding", "UTF-8")), project.properties());
+        assertEquals(Map.of( "junit.version", "5.9.0", "project.build.sourceEncoding", "UTF-8"), project.properties());
         assertEquals(Optional.of(Type.JAR), project.packagingOpt());
 
         assertEquals(List.of(
