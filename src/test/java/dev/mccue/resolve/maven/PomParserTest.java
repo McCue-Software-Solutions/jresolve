@@ -36,6 +36,7 @@ public final class PomParserTest {
                                 
                     <properties>
                         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+                        <junit.version>5.9.0</junit.version>
                     </properties>
                                 
                     <dependencies>
@@ -48,7 +49,7 @@ public final class PomParserTest {
                         <dependency>
                             <groupId>org.junit.jupiter</groupId>
                             <artifactId>junit-jupiter-params</artifactId>
-                            <version>5.9.0</version>
+                            <version>${junit.version}</version>
                             <scope>test</scope>
                         </dependency>
                     </dependencies>

@@ -314,11 +314,10 @@ public final class PomParser extends DefaultHandler {
                                 final var matcher = Pattern.compile("\\$\\{(.*?)\\}").matcher(content);
                                 if (matcher.find()) {
                                         final var variable = matcher.group(1);
-                                        if (state.properties.containsKey(variable) { //if matcher group 1 is the key
-                                                state.dependencyVersion = state.properties.get(variable);//value
-
+                                        if (state.properties.containsKey(variable)) { 
+                                                state.dependencyVersion = state.properties.get(variable);
                                         } else {
-                                                //throw some sort of error
+                                                //throw some sort of error TODO
                                         }
                                 } else {
                                         state.dependencyVersion = content;
