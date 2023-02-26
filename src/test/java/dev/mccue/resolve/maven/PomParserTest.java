@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public final class PomParserTest {
 
     @Test
-    public void parseBasicPOM() {
+    public void parseBasicPOM() throws SAXException {
         var basicPom = """
                 <?xml version="1.0" encoding="UTF-8"?>
                 <project xmlns="http://maven.apache.org/POM/4.0.0"

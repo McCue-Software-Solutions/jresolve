@@ -19,13 +19,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public final class PomParser extends DefaultHandler {
-    public static Project parsePom(InputStream pom) {
+    public static Project parsePom(InputStream pom) throws SAXException {
         var pomParser = new PomParser();
         var factory = SAXParserFactory.newDefaultInstance();
         try {
             var saxParser = factory.newSAXParser();
             saxParser.parse(pom, pomParser);
-        } catch (ParserConfigurationException | SAXException e) {
+        } catch (ParserConfigurationException e) {
             System.err.println(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
