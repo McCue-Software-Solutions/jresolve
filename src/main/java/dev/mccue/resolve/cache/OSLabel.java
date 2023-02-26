@@ -5,15 +5,9 @@ import java.util.Locale;
 import java.util.Optional;
 
 public enum OSLabel {
-    LINUX(System.getProperty("user.home") + "/.cache/jresolve"),
-    MAC_OS(System.getProperty("user.home") + "/Library/Caches/JResolve"),
-    WINDOWS(System.getenv("APPDATA") + "\\JResolve\\Cache");
-
-    private String path;
-
-    OSLabel(String path) {
-        this.path = path;
-    }
+    LINUX,
+    MAC_OS,
+    WINDOWS;
 
     public static Optional<OSLabel> current() {
         String operatingSystem = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
@@ -28,11 +22,19 @@ public enum OSLabel {
         }
     }
 
+    public String cachePath() {
+        return switch (this) {
+            case LINUX -> System.getProperty("user.home") + "/.cache/jresolve";
+            case MAC_OS -> System.getProperty("user.home") + "/Library/Caches/JResolve";
+            case WINDOWS -> System.getenv("APPDATA") + "\\JResolve\\Cache";
+        };
+    }
+
     public static Path cachePath(String url) {
         return Path.of(
                 current()
                         .orElseThrow(() -> new RuntimeException("Operating System could not be determined."))
-                        .path,
+                        .cachePath(),
                 url.split("(://|/)+", -1)
         );
     }
