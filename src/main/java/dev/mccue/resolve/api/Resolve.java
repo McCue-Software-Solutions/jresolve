@@ -10,21 +10,16 @@ import dev.mccue.resolve.util.Tuple2;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
@@ -118,18 +113,7 @@ public class Resolve {
 
         var response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
 
-
-        var pom = new PomParser();
-        var factory = SAXParserFactory.newDefaultInstance();
-
-        try {
-            var saxParser = factory.newSAXParser();
-            saxParser.parse(response.body(), pom);
-        } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
-        }
-
-        var project = pom.project();
+        var project = PomParser.parsePom(response.body());
 
         var foundDependencies = new ArrayList<Dependency>();
         for (Tuple2<Configuration, Dependency> dep : project.dependencies()) {
