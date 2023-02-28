@@ -142,7 +142,7 @@ public final class PomParserTest {
             assertEquals(new GroupId("dev.mccue"), project.module().groupId());
             assertEquals(new ArtifactId("resolve"), project.module().artifactId());
             assertEquals("0.0.1", project.version());
-            assertEquals(Map.of( "junit.version", "5.9.0", "project.build.sourceEncoding", "UTF-8"), project.properties());
+            assertEquals(Map.of("project.build.sourceEncoding", "UTF-8"), project.properties());
             assertEquals(Optional.of(Type.JAR), project.packagingOpt());
 
             assertEquals(List.of(
@@ -288,7 +288,7 @@ public final class PomParserTest {
             assertEquals(new GroupId("dev.mccue"), project.module().groupId());
             assertEquals(new ArtifactId("resolve"), project.module().artifactId());
             assertEquals("0.0.1", project.version());
-            assertEquals(Map.of( "junit.version", "5.9.0", "project.build.sourceEncoding", "UTF-8"), project.properties());
+            assertEquals(Map.of( "junit.version.two", "5.9", "junit.version.one", "5.9.0", "project.build.sourceEncoding", "UTF-8"), project.properties());
             assertEquals(Optional.of(Type.JAR), project.packagingOpt());
 
             assertEquals(List.of(

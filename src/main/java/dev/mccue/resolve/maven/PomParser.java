@@ -157,7 +157,7 @@ public final class PomParser extends DefaultHandler {
                 if (matcher.find()) {
                         final var variable = matcher.group(1);
                         if (state.properties.containsKey(variable)) {
-                               dependencies0.add(new Tuple2<Configuration, Dependency>(dependency.first(), dependency.second().withVersion(state.properties.get(variable)))); 
+                               dependencies0.add(new Tuple2<Configuration, Dependency>(dependency.first(), dependency.second().withVersion(matcher.replaceAll(state.properties.get(variable))))); 
                         } else {
                                 throw new ModelParseException("Undefined variable " + variable + " used in the POM");
                         }
