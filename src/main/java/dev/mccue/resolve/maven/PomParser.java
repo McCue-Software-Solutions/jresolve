@@ -4,8 +4,15 @@ import dev.mccue.resolve.core.*;
 import dev.mccue.resolve.core.Library;
 import dev.mccue.resolve.util.LL;
 import dev.mccue.resolve.util.Tuple2;
+import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -13,6 +20,20 @@ import java.util.stream.Collectors;
 import java.util.regex.Pattern;
 
 public final class PomParser extends DefaultHandler {
+    public static Project parsePom(InputStream pom) throws SAXException {
+        var pomParser = new PomParser();
+        var factory = SAXParserFactory.newDefaultInstance();
+        try {
+            var saxParser = factory.newSAXParser();
+            saxParser.parse(pom, pomParser);
+        } catch (ParserConfigurationException e) {
+            System.err.println(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return pomParser.project();
+    }
+
     final State state = new State();
     LL<String> paths = new LL.Nil<>();
 

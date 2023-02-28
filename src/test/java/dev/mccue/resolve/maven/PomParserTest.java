@@ -22,8 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public final class PomParserTest {
 
     @Test
-    public void parseBasicPOM() throws ParserConfigurationException, SAXException, IOException {
-        var pomParser = new PomParser();
+    public void parseBasicPOM() throws SAXException {
         var basicPom = """
                 <?xml version="1.0" encoding="UTF-8"?>
                 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -129,15 +128,13 @@ public final class PomParserTest {
                     </build>
                 </project>
                 """;
-        var factory = SAXParserFactory.newDefaultInstance();
-        var saxParser = factory.newSAXParser();
-        saxParser.parse(
-                new ByteArrayInputStream(basicPom.getBytes(StandardCharsets.UTF_8)),
-                pomParser
-        );
 
+<<<<<<< HEAD
         try {
             var project = pomParser.project();
+=======
+        var project = PomParser.parsePom(new ByteArrayInputStream(basicPom.getBytes(StandardCharsets.UTF_8)));
+>>>>>>> ee201aafc174beb6ce180178060bc5f2e4b8a810
 
             assertEquals(new GroupId("dev.mccue"), project.module().groupId());
             assertEquals(new ArtifactId("resolve"), project.module().artifactId());
