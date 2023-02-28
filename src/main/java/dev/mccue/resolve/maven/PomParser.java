@@ -9,10 +9,8 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -20,7 +18,7 @@ import java.util.stream.Collectors;
 import java.util.regex.Pattern;
 
 public final class PomParser extends DefaultHandler {
-    public static Project parsePom(InputStream pom) throws SAXException {
+    public static Project parsePom(InputStream pom) throws SAXException, ModelParseException {
         var pomParser = new PomParser();
         var factory = SAXParserFactory.newDefaultInstance();
         try {

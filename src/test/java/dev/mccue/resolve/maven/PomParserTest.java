@@ -129,7 +129,8 @@ public final class PomParserTest {
                 </project>
                 """;
 
-        var project = PomParser.parsePom(new ByteArrayInputStream(basicPom.getBytes(StandardCharsets.UTF_8)));
+        try {
+            var project = PomParser.parsePom(new ByteArrayInputStream(basicPom.getBytes(StandardCharsets.UTF_8)));
 
             assertEquals(new GroupId("dev.mccue"), project.module().groupId());
             assertEquals(new ArtifactId("resolve"), project.module().artifactId());
@@ -153,8 +154,7 @@ public final class PomParserTest {
                             "5.9.0"
                     ))
             ), project.dependencies());
-        } catch (ModelParseException e) { 
-        }
+        } catch (ModelParseException e) { }
     }
 
     @Test
