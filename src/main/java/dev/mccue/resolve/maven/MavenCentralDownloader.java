@@ -68,7 +68,7 @@ public final class MavenCentralDownloader {
                     .build();
             var headResponse = client.send(headRequest, HttpResponse.BodyHandlers.ofString());
             if (headResponse.statusCode() != 200) {
-                throw new IOException("Bad response code: " + headResponse.statusCode() + " " + uri);
+                throw new IOException("Bad response code: " + headResponse.statusCode());
             }
 
             var request = HttpRequest.newBuilder()
@@ -80,7 +80,7 @@ public final class MavenCentralDownloader {
             var response = client.send(request, HttpResponse.BodyHandlers.ofFile(path));
 
             if (response.statusCode() != 200) {
-                throw new IOException("Bad response code: " + response.statusCode() + " " + uri);
+                throw new IOException("Bad response code: " + response.statusCode());
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
