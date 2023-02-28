@@ -1,6 +1,6 @@
 package dev.mccue.resolve.maven;
 
-public class ModelParseException extends Throwable{
+public class ModelParseException extends Exception {
     private final String message;
 
     public ModelParseException(String message) {
