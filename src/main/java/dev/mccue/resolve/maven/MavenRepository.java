@@ -70,7 +70,7 @@ public final class MavenRepository {
         }
     }
 
-    private URI uriOf(Dependency dependency, Extension extension, Classifier classifier) {
+    public URI uriOf(Dependency dependency, Extension extension, Classifier classifier) {
         var groupId = dependency.library().groupId();
         var artifactId = dependency.library().artifactId();
         var version = dependency.version();
