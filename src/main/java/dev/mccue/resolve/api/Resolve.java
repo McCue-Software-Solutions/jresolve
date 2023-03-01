@@ -4,7 +4,7 @@ import dev.mccue.resolve.core.Classifier;
 import dev.mccue.resolve.core.Configuration;
 import dev.mccue.resolve.core.Dependency;
 import dev.mccue.resolve.core.Extension;
-import dev.mccue.resolve.maven.MavenCentralDownloader;
+import dev.mccue.resolve.maven.MavenRepository;
 import dev.mccue.resolve.maven.PomParser;
 import dev.mccue.resolve.util.Tuple2;
 import org.xml.sax.SAXException;
@@ -28,10 +28,12 @@ public class Resolve {
     private ArrayList<Repository> repositories; //unused for now
 
     private static final String MAVEN_BASE_URL = "https://repo.maven.apache.org/maven2/";
+    private MavenRepository maven;
 
     public Resolve() {
         dependencies = new ArrayList<>();
         repositories = new ArrayList<>();
+        maven = new MavenRepository();
     }
 
     public Resolve addDependency(Dependency dep) {
@@ -39,14 +41,12 @@ public class Resolve {
         return this;
     }
 
-    public void run() throws IOException, ParserConfigurationException, InterruptedException, SAXException {
+    public void run() throws IOException, InterruptedException, SAXException {
         recursiveAddDependencies(dependencies);
 
         for (Dependency dependency : dependencies) {
-            var downloader = new MavenCentralDownloader();
-            downloader.get(dependency, Extension.POM, Classifier.EMPTY);
-            downloader.get(dependency, Extension.JAR, Classifier.EMPTY);
-
+            maven.download(dependency, Extension.POM, Classifier.EMPTY);
+            maven.download(dependency, Extension.JAR, Classifier.EMPTY);
         }
     }
 
@@ -71,49 +71,8 @@ public class Resolve {
         }
     }
 
-    private ArrayList<Dependency> getDependentPoms(Dependency dependency) throws IOException, InterruptedException, SAXException {
-        var groupId = dependency.library().groupId();
-        var artifactId = dependency.library().artifactId();
-        var version = dependency.version();
-
-        var groupUrlFragment = Arrays.stream(groupId.value().split("\\."))
-                .map(part -> URLEncoder.encode(part, StandardCharsets.UTF_8))
-                .collect(Collectors.joining("/"));
-
-        var dependencyBaseURL = MAVEN_BASE_URL +
-                groupUrlFragment + "/" +
-                URLEncoder.encode(artifactId.value(), StandardCharsets.UTF_8) + "/" +
-                URLEncoder.encode(version, StandardCharsets.UTF_8) + "/";
-
-        var fileName = artifactId.value()
-                + "-"
-                + version
-                + "." + Extension.POM.value();
-
-        var client = HttpClient.newBuilder()
-                .version(HttpClient.Version.HTTP_1_1)
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .connectTimeout(Duration.ofSeconds(20))
-                .build();
-
-        var uri = URI.create(dependencyBaseURL + fileName);
-
-        var headRequest = HttpRequest.newBuilder()
-                .uri(uri)
-                .HEAD()
-                .build();
-        var headResponse = client.send(headRequest, HttpResponse.BodyHandlers.ofString());
-        if (headResponse.statusCode() != 200) {
-            throw new IOException("Bad response code: " + headResponse.statusCode());
-        }
-
-        var request = HttpRequest.newBuilder()
-                .uri(uri)
-                .build();
-
-        var response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
-
-        var project = PomParser.parsePom(response.body());
+    public ArrayList<Dependency> getDependentPoms(Dependency dependency) throws IOException, InterruptedException, SAXException {
+        var project = PomParser.parsePom(maven.getPom(dependency));
 
         var foundDependencies = new ArrayList<Dependency>();
         for (Tuple2<Configuration, Dependency> dep : project.dependencies()) {
