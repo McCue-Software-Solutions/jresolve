@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 /**
  * Creates an object from a specified path at maven central. Allows for the downloading of POMS and Jars.
  */
-public final class MavenRepository {
+public final class MavenRepository implements Repository {
     private final String base_url;
 
     /**

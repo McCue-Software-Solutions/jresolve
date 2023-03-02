@@ -6,34 +6,22 @@ import dev.mccue.resolve.core.Dependency;
 import dev.mccue.resolve.core.Extension;
 import dev.mccue.resolve.maven.MavenRepository;
 import dev.mccue.resolve.maven.PomParser;
+import dev.mccue.resolve.maven.Repository;
 import dev.mccue.resolve.util.Tuple2;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 
 public class Resolve {
     private ArrayList<Dependency> dependencies;
-    private ArrayList<Repository> repositories; //unused for now
+    private Repository repository;
 
-    private static final String MAVEN_BASE_URL = "https://repo.maven.apache.org/maven2/";
-    private MavenRepository maven;
-
-    public Resolve() {
+    public Resolve(Repository repository) {
         dependencies = new ArrayList<>();
-        repositories = new ArrayList<>();
-        maven = new MavenRepository();
+        this.repository = repository;
     }
 
     public Resolve addDependency(Dependency dep) {
@@ -41,16 +29,16 @@ public class Resolve {
         return this;
     }
 
-    public void run() throws IOException, InterruptedException, SAXException {
+    public void run() throws SAXException {
         recursiveAddDependencies(dependencies);
 
         for (Dependency dependency : dependencies) {
-            maven.download(dependency, Extension.POM, Classifier.EMPTY);
-            maven.download(dependency, Extension.JAR, Classifier.EMPTY);
+            repository.download(dependency, Extension.POM, Classifier.EMPTY);
+            repository.download(dependency, Extension.JAR, Classifier.EMPTY);
         }
     }
 
-    private void recursiveAddDependencies(ArrayList<Dependency> recursiveDependencies) throws IOException, InterruptedException, SAXException {
+    private void recursiveAddDependencies(ArrayList<Dependency> recursiveDependencies) throws SAXException {
         var newDependencies = new ArrayList<Dependency>();
         for (Dependency dep : recursiveDependencies) {
             for (Dependency found : getDependentPoms(dep)) {
@@ -71,8 +59,8 @@ public class Resolve {
         }
     }
 
-    public ArrayList<Dependency> getDependentPoms(Dependency dependency) throws IOException, InterruptedException, SAXException {
-        var project = PomParser.parsePom(maven.getPom(dependency));
+    public ArrayList<Dependency> getDependentPoms(Dependency dependency) throws SAXException {
+        var project = PomParser.parsePom(repository.getPom(dependency));
 
         var foundDependencies = new ArrayList<Dependency>();
         for (Tuple2<Configuration, Dependency> dep : project.dependencies()) {
@@ -84,7 +72,7 @@ public class Resolve {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ParserConfigurationException, SAXException {
-        var r = new Resolve()
+        var r = new Resolve(new MavenRepository())
                 .addDependency(new Dependency("org.clojure", "clojure", "1.11.0"));
         r.run();
     }
