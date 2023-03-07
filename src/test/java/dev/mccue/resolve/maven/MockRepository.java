@@ -1,5 +1,6 @@
 package dev.mccue.resolve.maven;
 
+import dev.mccue.resolve.api.Repository;
 import dev.mccue.resolve.core.Classifier;
 import dev.mccue.resolve.core.Dependency;
 import dev.mccue.resolve.core.Extension;

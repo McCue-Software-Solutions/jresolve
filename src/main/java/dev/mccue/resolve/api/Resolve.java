@@ -6,7 +6,6 @@ import dev.mccue.resolve.core.Dependency;
 import dev.mccue.resolve.core.Extension;
 import dev.mccue.resolve.maven.MavenRepository;
 import dev.mccue.resolve.maven.PomParser;
-import dev.mccue.resolve.maven.Repository;
 import dev.mccue.resolve.util.Tuple2;
 import org.xml.sax.SAXException;
 

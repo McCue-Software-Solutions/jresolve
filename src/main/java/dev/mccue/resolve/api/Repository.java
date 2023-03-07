@@ -1,4 +1,4 @@
-package dev.mccue.resolve.maven;
+package dev.mccue.resolve.api;
 
 import dev.mccue.resolve.core.Classifier;
 import dev.mccue.resolve.core.Dependency;
