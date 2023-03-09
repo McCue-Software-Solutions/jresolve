@@ -105,13 +105,14 @@ public final class PomParser extends DefaultHandler {
         String groupId = "";
         Optional<String> artifactIdOpt = Optional.empty();
         String version = "";
+
         Optional<String> parentGroupIdOpt = Optional.empty();
         Optional<String> parentArtifactIdOpt = Optional.empty();
         String parentVersion = "";
+        Optional<String> parentPathOpt = Optional.empty();
 
         String description = "";
         String url = "";
-
 
         Optional<Type> packagingOpt = Optional.empty();
         final ArrayList<Tuple2<Configuration, Dependency>> dependencies = new ArrayList<>();
@@ -169,22 +170,6 @@ public final class PomParser extends DefaultHandler {
                 versionOpt = Optional.of(parentVersion).filter(s -> !s.isEmpty());
             }
 
-            var dependencies0 = new ArrayList<Tuple2<Configuration, Dependency>>();
-
-            for (var dependency : dependencies) {
-                final var matcher = Pattern.compile("\\$\\{(.*?)\\}").matcher(dependency.second().version());
-                if (matcher.find()) {
-                        final var variable = matcher.group(1);
-                        if (state.properties.containsKey(variable)) {
-                               dependencies0.add(new Tuple2<Configuration, Dependency>(dependency.first(), dependency.second().withVersion(matcher.replaceAll(state.properties.get(variable))))); 
-                        } else {
-                                throw new ModelParseException("Undefined variable " + variable + " used in the POM");
-                        }
-                } else {
-                        dependencies0.add(dependency);
-                }
-            }
-
             var properties0 = Map.copyOf(properties);
 
             final Optional<Library> parentModuleOpt;
@@ -214,6 +199,27 @@ public final class PomParser extends DefaultHandler {
                 throw new RuntimeException("No parent version found");
             }
 
+            if (parentModule != null) {
+                var downloader = new MavenRepository();
+                var parentProject = PomParser.parsePom(downloader.getPom(new Dependency(parentModule, parentVersion)));
+                dependencies.addAll(parentProject.dependencies());
+                //combine projects
+            }
+
+            var dependencies0 = new ArrayList<Tuple2<Configuration, Dependency>>();
+            for (var dependency : dependencies) {
+                final var matcher = Pattern.compile("\\$\\{(.*?)\\}").matcher(dependency.second().version());
+                if (matcher.find()) {
+                        final var variable = matcher.group(1);
+                        if (state.properties.containsKey(variable)) {
+                               dependencies0.add(new Tuple2<Configuration, Dependency>(dependency.first(), dependency.second().withVersion(matcher.replaceAll(state.properties.get(variable))))); 
+                        } else {
+                                throw new ModelParseException("Undefined variable " + variable + " used in the POM");
+                        }
+                } else {
+                        dependencies0.add(dependency);
+                }
+            }
 
             // TODO
             for (var entry : properties0.entrySet()) {
@@ -642,6 +648,11 @@ public final class PomParser extends DefaultHandler {
                         List.of("version", "parent", "project"),
                         (state, content) ->
                                 state.parentVersion = content
+                ),
+                content(
+                        List.of("relativePath", "parent", "project"),
+                        (state, content) ->
+                                state.parentPathOpt = Optional.of(content)
                 ),
                 content(
                         List.of("description", "project"),
