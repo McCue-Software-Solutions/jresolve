@@ -6,4 +6,5 @@ bin/
 target/
 *.iml
 downloads/
+pom.xml
 cache/
