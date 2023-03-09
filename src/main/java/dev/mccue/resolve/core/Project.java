@@ -5,6 +5,7 @@ import dev.mccue.resolve.doc.Incomplete;
 import dev.mccue.resolve.doc.MavenSpecific;
 import dev.mccue.resolve.util.Tuple2;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,7 +27,7 @@ public record Project(
         List<Tuple2<Configuration, Dependency>> dependencyManagement,
 
         @MavenSpecific
-        List<Tuple2<String, String>> properties,
+        Map<String, String> properties,
 
         @MavenSpecific
         List<Profile> profiles,

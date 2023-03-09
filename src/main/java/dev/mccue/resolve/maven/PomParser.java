@@ -9,17 +9,16 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.regex.Pattern;
 
 public final class PomParser extends DefaultHandler {
-    public static Project parsePom(InputStream pom) throws SAXException {
+    public static Project parsePom(InputStream pom) throws SAXException, ModelParseException {
         var pomParser = new PomParser();
         var factory = SAXParserFactory.newDefaultInstance();
         try {
@@ -118,7 +117,7 @@ public final class PomParser extends DefaultHandler {
         final ArrayList<Tuple2<Configuration, Dependency>> dependencies = new ArrayList<>();
         final ArrayList<Tuple2<Configuration, Dependency>> dependencyManagement = new ArrayList<>();
 
-        final ArrayList<Tuple2<String, String>> properties = new ArrayList<>();
+        final HashMap<String, String> properties = new HashMap<>();
 
         Optional<GroupId> relocationGroupIdOpt = Optional.empty();
         Optional<ArtifactId> relocationArtifactIdOpt = Optional.empty();
@@ -155,7 +154,7 @@ public final class PomParser extends DefaultHandler {
 
         final ArrayList<Profile> profiles = new ArrayList<>();
 
-        Project project() {
+        Project project() throws ModelParseException{
             final Optional<String> groupIdOpt;
             if (!groupId.isEmpty()) {
                 groupIdOpt = Optional.of(groupId);
@@ -170,7 +169,23 @@ public final class PomParser extends DefaultHandler {
                 versionOpt = Optional.of(parentVersion).filter(s -> !s.isEmpty());
             }
 
-            var properties0 = List.copyOf(properties);
+            var dependencies0 = new ArrayList<Tuple2<Configuration, Dependency>>();
+
+            for (var dependency : dependencies) {
+                final var matcher = Pattern.compile("\\$\\{(.*?)\\}").matcher(dependency.second().version());
+                if (matcher.find()) {
+                        final var variable = matcher.group(1);
+                        if (state.properties.containsKey(variable)) {
+                               dependencies0.add(new Tuple2<Configuration, Dependency>(dependency.first(), dependency.second().withVersion(matcher.replaceAll(state.properties.get(variable))))); 
+                        } else {
+                                throw new ModelParseException("Undefined variable " + variable + " used in the POM");
+                        }
+                } else {
+                        dependencies0.add(dependency);
+                }
+            }
+
+            var properties0 = Map.copyOf(properties);
 
             final Optional<Library> parentModuleOpt;
             {
@@ -201,9 +216,9 @@ public final class PomParser extends DefaultHandler {
 
 
             // TODO
-            for (var entry : properties0) {
-                if ("extraDependencyAttributes".equals(entry.first())) {
-                    var s = entry.second();
+            for (var entry : properties0.entrySet()) {
+                if ("extraDependencyAttributes".equals(entry.getKey())) {
+                    var s = entry.getValue();
                 }
             }
 
@@ -212,8 +227,9 @@ public final class PomParser extends DefaultHandler {
             ));
 
             var extraAttrs = properties0
+                    .entrySet()
                     .stream()
-                    .filter(pair -> pair.first().equals("extraDependencyAttributes"))
+                    .filter(pair -> pair.getKey().equals("extraDependencyAttributes"))
                     .findFirst();//.orElse(Map.of());
 
             var projModule = new Library(
@@ -227,7 +243,7 @@ public final class PomParser extends DefaultHandler {
             return new Project(
                     projModule,
                     finalVersion,
-                    List.copyOf(dependencies), // TODO
+                    dependencies0, // TODO
                     Map.of(),
                     parentOpt,
                     List.copyOf(dependencyManagement),
@@ -267,7 +283,7 @@ public final class PomParser extends DefaultHandler {
         void add(State state, Configuration configuration, Dependency dependency);
     }
 
-    private static List<Handler> dependencyHandlers(
+    private static List<Handler> dependencyHandlers (
             LL<String> prefix,
             AddDepHandler addDepHandler
     ) {
@@ -329,7 +345,7 @@ public final class PomParser extends DefaultHandler {
                 ),
                 content(
                         new LL.Cons<>("version", prefix),
-                        (state, content) ->
+                        (state, content) -> 
                                 state.dependencyVersion = content
                 ),
                 content(
@@ -680,7 +696,7 @@ public final class PomParser extends DefaultHandler {
         handlers.addAll(propertyHandlers(
                 LL.fromJavaList(List.of("properties", "project")),
                 (state, key, value) ->
-                        state.properties.add(new Tuple2<>(key, value))
+                        state.properties.put(key, value)
         ));
 
         handlers.addAll(profileHandlers(
@@ -695,7 +711,7 @@ public final class PomParser extends DefaultHandler {
                 ));
     }
 
-    public Project project() {
+    public Project project() throws ModelParseException {
         return this.state.project();
     }
 }

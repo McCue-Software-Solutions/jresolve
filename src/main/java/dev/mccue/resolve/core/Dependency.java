@@ -87,4 +87,15 @@ public record Dependency(
     public Dependency(String group, String artifact, String version) {
         this(new Library(new GroupId(group), new ArtifactId(artifact)), version);
     }
+
+    public Dependency withVersion(String version) {
+        return new Dependency(
+                this.library,
+                version,
+                this.configuration,
+                this.minimizedExclusions,
+                this.publication,
+                this.optional,
+                this.transitive);
+    }
 }
