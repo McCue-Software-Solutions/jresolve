@@ -4,34 +4,23 @@ import dev.mccue.resolve.core.Classifier;
 import dev.mccue.resolve.core.Configuration;
 import dev.mccue.resolve.core.Dependency;
 import dev.mccue.resolve.core.Extension;
-import dev.mccue.resolve.maven.MavenCentralDownloader;
+import dev.mccue.resolve.maven.MavenRepository;
 import dev.mccue.resolve.maven.PomParser;
 import dev.mccue.resolve.util.Tuple2;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 
 public class Resolve {
     private ArrayList<Dependency> dependencies;
-    private ArrayList<Repository> repositories; //unused for now
+    private Repository repository;
 
-    private static final String MAVEN_BASE_URL = "https://repo.maven.apache.org/maven2/";
-
-    public Resolve() {
+    public Resolve(Repository repository) {
         dependencies = new ArrayList<>();
-        repositories = new ArrayList<>();
+        this.repository = repository;
     }
 
     public Resolve addDependency(Dependency dep) {
@@ -39,18 +28,16 @@ public class Resolve {
         return this;
     }
 
-    public void run() throws IOException, ParserConfigurationException, InterruptedException, SAXException {
+    public void run() throws SAXException {
         recursiveAddDependencies(dependencies);
 
         for (Dependency dependency : dependencies) {
-            var downloader = new MavenCentralDownloader();
-            downloader.get(dependency, Extension.POM, Classifier.EMPTY);
-            downloader.get(dependency, Extension.JAR, Classifier.EMPTY);
-
+            repository.download(dependency, Extension.POM, Classifier.EMPTY);
+            repository.download(dependency, Extension.JAR, Classifier.EMPTY);
         }
     }
 
-    private void recursiveAddDependencies(ArrayList<Dependency> recursiveDependencies) throws IOException, InterruptedException, SAXException {
+    private void recursiveAddDependencies(ArrayList<Dependency> recursiveDependencies) throws SAXException {
         var newDependencies = new ArrayList<Dependency>();
         for (Dependency dep : recursiveDependencies) {
             for (Dependency found : getDependentPoms(dep)) {
@@ -71,49 +58,8 @@ public class Resolve {
         }
     }
 
-    private ArrayList<Dependency> getDependentPoms(Dependency dependency) throws IOException, InterruptedException, SAXException {
-        var groupId = dependency.library().groupId();
-        var artifactId = dependency.library().artifactId();
-        var version = dependency.version();
-
-        var groupUrlFragment = Arrays.stream(groupId.value().split("\\."))
-                .map(part -> URLEncoder.encode(part, StandardCharsets.UTF_8))
-                .collect(Collectors.joining("/"));
-
-        var dependencyBaseURL = MAVEN_BASE_URL +
-                groupUrlFragment + "/" +
-                URLEncoder.encode(artifactId.value(), StandardCharsets.UTF_8) + "/" +
-                URLEncoder.encode(version, StandardCharsets.UTF_8) + "/";
-
-        var fileName = artifactId.value()
-                + "-"
-                + version
-                + "." + Extension.POM.value();
-
-        var client = HttpClient.newBuilder()
-                .version(HttpClient.Version.HTTP_1_1)
-                .followRedirects(HttpClient.Redirect.NORMAL)
-                .connectTimeout(Duration.ofSeconds(20))
-                .build();
-
-        var uri = URI.create(dependencyBaseURL + fileName);
-
-        var headRequest = HttpRequest.newBuilder()
-                .uri(uri)
-                .HEAD()
-                .build();
-        var headResponse = client.send(headRequest, HttpResponse.BodyHandlers.ofString());
-        if (headResponse.statusCode() != 200) {
-            throw new IOException("Bad response code: " + headResponse.statusCode());
-        }
-
-        var request = HttpRequest.newBuilder()
-                .uri(uri)
-                .build();
-
-        var response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
-
-        var project = PomParser.parsePom(response.body());
+    public ArrayList<Dependency> getDependentPoms(Dependency dependency) throws SAXException {
+        var project = PomParser.parsePom(repository.getPom(dependency));
 
         var foundDependencies = new ArrayList<Dependency>();
         for (Tuple2<Configuration, Dependency> dep : project.dependencies()) {
@@ -125,7 +71,7 @@ public class Resolve {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ParserConfigurationException, SAXException {
-        var r = new Resolve()
+        var r = new Resolve(new MavenRepository())
                 .addDependency(new Dependency("org.clojure", "clojure", "1.11.0"));
         r.run();
     }
