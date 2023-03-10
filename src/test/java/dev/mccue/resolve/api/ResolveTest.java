@@ -2,6 +2,7 @@ package dev.mccue.resolve.api;
 
 import dev.mccue.resolve.core.Dependency;
 import dev.mccue.resolve.maven.MockRepository;
+import dev.mccue.resolve.maven.ModelParseException;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ResolveTest {
     @Test
-    public void testResolve() throws SAXException {
+    public void testResolve() throws SAXException, ModelParseException {
         var mock = new MockRepository("graph1");
         var r = new Resolve(mock)
                 .addDependency(new Dependency("org.clojure", "clojure", "1.11.0"));

@@ -5,6 +5,7 @@ import dev.mccue.resolve.core.Configuration;
 import dev.mccue.resolve.core.Dependency;
 import dev.mccue.resolve.core.Extension;
 import dev.mccue.resolve.maven.MavenRepository;
+import dev.mccue.resolve.maven.ModelParseException;
 import dev.mccue.resolve.maven.PomParser;
 import dev.mccue.resolve.util.Tuple2;
 import org.xml.sax.SAXException;
@@ -28,7 +29,7 @@ public class Resolve {
         return this;
     }
 
-    public void run() throws SAXException {
+    public void run() throws SAXException, ModelParseException {
         recursiveAddDependencies(dependencies);
 
         for (Dependency dependency : dependencies) {
@@ -37,7 +38,7 @@ public class Resolve {
         }
     }
 
-    private void recursiveAddDependencies(ArrayList<Dependency> recursiveDependencies) throws SAXException {
+    private void recursiveAddDependencies(ArrayList<Dependency> recursiveDependencies) throws SAXException, ModelParseException {
         var newDependencies = new ArrayList<Dependency>();
         for (Dependency dep : recursiveDependencies) {
             for (Dependency found : getDependentPoms(dep)) {
@@ -58,7 +59,7 @@ public class Resolve {
         }
     }
 
-    public ArrayList<Dependency> getDependentPoms(Dependency dependency) throws SAXException {
+    public ArrayList<Dependency> getDependentPoms(Dependency dependency) throws SAXException, ModelParseException {
         var project = PomParser.parsePom(repository.getPom(dependency));
 
         var foundDependencies = new ArrayList<Dependency>();
@@ -70,7 +71,7 @@ public class Resolve {
         return foundDependencies;
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException, ParserConfigurationException, SAXException {
+    public static void main(String[] args) throws IOException, InterruptedException, ParserConfigurationException, SAXException, ModelParseException {
         var r = new Resolve(new MavenRepository())
                 .addDependency(new Dependency("org.clojure", "clojure", "1.11.0"));
         r.run();
