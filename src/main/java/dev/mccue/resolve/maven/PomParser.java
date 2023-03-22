@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import java.util.regex.Pattern;
 
 public final class PomParser extends DefaultHandler {
-    public static Project parsePom(InputStream pom) throws SAXException, ModelParseException {
+    public static PomInfo parsePom(InputStream pom) throws SAXException, ModelParseException {
         var pomParser = new PomParser();
         var factory = SAXParserFactory.newDefaultInstance();
         try {
@@ -29,7 +29,7 @@ public final class PomParser extends DefaultHandler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return pomParser.project();
+        return pomParser.pomInfo();
     }
 
     final State state = new State();
@@ -155,7 +155,7 @@ public final class PomParser extends DefaultHandler {
 
         final ArrayList<Profile> profiles = new ArrayList<>();
 
-        Project project() throws ModelParseException{
+        PomInfo pomInfo() throws ModelParseException {
             final Optional<String> groupIdOpt;
             if (!groupId.isEmpty()) {
                 groupIdOpt = Optional.of(groupId);
@@ -199,10 +199,15 @@ public final class PomParser extends DefaultHandler {
                 throw new RuntimeException("No parent version found");
             }
 
+            // TODO Remove, this is PomInfo's job
             if (parentModule != null) {
-                var downloader = new MavenRepository();
-                var parentProject = PomParser.parsePom(downloader.getPom(new Dependency(parentModule, parentVersion)));
-                dependencies.addAll(parentProject.dependencies());
+                var repository = new MavenRepository();
+                try {
+                    var parentProject = PomParser.parsePom(repository.getPom(new Dependency(parentModule, parentVersion)));
+                    dependencies.addAll(parentProject.dependencies());
+                } catch (SAXException e) {
+
+                }
                 //combine projects
             }
 
@@ -246,7 +251,7 @@ public final class PomParser extends DefaultHandler {
 
             // TODO: relocationDependencyOpt, etc
 
-            return new Project(
+            return new PomInfo(
                     projModule,
                     finalVersion,
                     dependencies0, // TODO
@@ -620,98 +625,98 @@ public final class PomParser extends DefaultHandler {
         List<Handler> handlers = new ArrayList<>();
         handlers.addAll(List.of(
                 content(
-                        List.of("groupId", "project"),
+                        List.of("groupId", "pomInfo"),
                         (state, content) ->
                                 state.groupId = content
                 ),
                 content(
-                        List.of("artifactId", "project"),
+                        List.of("artifactId", "pomInfo"),
                         (state, content) ->
                                 state.artifactIdOpt = Optional.of(content)
                 ),
                 content(
-                        List.of("version", "project"),
+                        List.of("version", "pomInfo"),
                         (state, content) ->
                                 state.version = content
                 ),
                 content(
-                        List.of("groupId", "parent", "project"),
+                        List.of("groupId", "parent", "pomInfo"),
                         (state, content) ->
                                 state.parentGroupIdOpt = Optional.of(content)
                 ),
                 content(
-                        List.of("artifactId", "parent", "project"),
+                        List.of("artifactId", "parent", "pomInfo"),
                         (state, content) ->
                                 state.parentArtifactIdOpt = Optional.of(content)
                 ),
                 content(
-                        List.of("version", "parent", "project"),
+                        List.of("version", "parent", "pomInfo"),
                         (state, content) ->
                                 state.parentVersion = content
                 ),
                 content(
-                        List.of("relativePath", "parent", "project"),
+                        List.of("relativePath", "parent", "pomInfo"),
                         (state, content) ->
                                 state.parentPathOpt = Optional.of(content)
                 ),
                 content(
-                        List.of("description", "project"),
+                        List.of("description", "pomInfo"),
                         (state, content) ->
                                 state.description = content
                 ),
 
                 content(
-                        List.of("url", "project"),
+                        List.of("url", "pomInfo"),
                         (state, content) ->
                                 state.url = content
                 ),
 
                 content(
-                        List.of("packaging", "project"),
+                        List.of("packaging", "pomInfo"),
                         (state, content) ->
                                 state.packagingOpt = Optional.of(new Type(content))
                 ),
                 content(
-                        List.of("groupId", "relocation", "distributionManagement", "project"),
+                        List.of("groupId", "relocation", "distributionManagement", "pomInfo"),
                         (state, content) ->
                                 state.relocationGroupIdOpt = Optional.of(
                                         new GroupId(content)
                                 )
                 ),
                 content(
-                        List.of("artifactId", "relocation", "distributionManagement", "project"),
+                        List.of("artifactId", "relocation", "distributionManagement", "pomInfo"),
                         (state, content) ->
                                 state.relocationArtifactIdOpt = Optional.of(
                                         new ArtifactId(content)
                                 )
                 ),
                 content(
-                        List.of("version", "relocation", "distributionManagement", "project"),
+                        List.of("version", "relocation", "distributionManagement", "pomInfo"),
                         (state, content) ->
                                 state.relocationVersionOpt = Optional.of(content)
                 )
         ));
 
         handlers.addAll(dependencyHandlers(
-                LL.fromJavaList(List.of("dependency", "dependencies", "project")),
+                LL.fromJavaList(List.of("dependency", "dependencies", "pomInfo")),
                 (state, configuration, dependency) ->
                         state.dependencies.add(new Tuple2<>(configuration, dependency))
         ));
 
         handlers.addAll(dependencyHandlers(
-                LL.fromJavaList(List.of("dependency", "dependencies", "dependencyManagement", "project")),
+                LL.fromJavaList(List.of("dependency", "dependencies", "dependencyManagement", "pomInfo")),
                 (state, configuration, dependency) ->
                         state.dependencyManagement.add(new Tuple2<>(configuration, dependency))
         ));
 
         handlers.addAll(propertyHandlers(
-                LL.fromJavaList(List.of("properties", "project")),
+                LL.fromJavaList(List.of("properties", "pomInfo")),
                 (state, key, value) ->
                         state.properties.put(key, value)
         ));
 
         handlers.addAll(profileHandlers(
-                LL.fromJavaList(List.of("profile", "profiles", "project")),
+                LL.fromJavaList(List.of("profile", "profiles", "pomInfo")),
                 (state, profile) ->
                         state.profiles.add(profile)
         ));
@@ -722,7 +727,7 @@ public final class PomParser extends DefaultHandler {
                 ));
     }
 
-    public Project project() throws ModelParseException {
-        return this.state.project();
+    public PomInfo pomInfo() throws ModelParseException {
+        return this.state.pomInfo();
     }
 }
