@@ -199,18 +199,6 @@ public final class PomParser extends DefaultHandler {
                 throw new RuntimeException("No parent version found");
             }
 
-            // TODO Remove, this is PomInfo's job
-            if (parentModule != null) {
-                var repository = new MavenRepository();
-                try {
-                    var parentProject = PomParser.parsePom(repository.getPom(new Dependency(parentModule, parentVersion)));
-                    dependencies.addAll(parentProject.dependencies());
-                } catch (SAXException e) {
-
-                }
-                //combine projects
-            }
-
             var dependencies0 = new ArrayList<Tuple2<Configuration, Dependency>>();
             for (var dependency : dependencies) {
                 final var matcher = Pattern.compile("\\$\\{(.*?)\\}").matcher(dependency.second().version());
