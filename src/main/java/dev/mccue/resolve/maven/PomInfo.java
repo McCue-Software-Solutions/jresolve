@@ -63,9 +63,9 @@ public record PomInfo(
                 relocated, actualVersionOpt, publications);
         parent.ifPresent(parent -> {
             try {
-                var parentProject = PomParser.parsePom(repository.getPom(new Dependency(parent.first(), parent.second())));
+                var parentProject = PomParser.parsePom(repository.getPom(new Dependency(parent.first(), parent.second()))).toProject();
                 project.dependencies().addAll(parentProject.dependencies());
-                project.properties().putAll(parentProject.properties);
+                project.properties().putAll(parentProject.properties());
             } catch (SAXException e) {
                 throw new RuntimeException(e);
             } catch (ModelParseException e) {
