@@ -186,7 +186,7 @@ public final class PomParser extends DefaultHandler {
                 }
             }
 
-            var finalGroupId = groupIdOpt.orElseThrow(() -> new RuntimeException("No organization found"));
+            var finalGroupId = groupIdOpt.orElseThrow(() -> new RuntimeException("No groupId found"));
             var artifactId = artifactIdOpt.orElseThrow(() -> new RuntimeException("No artifactId found"));
             var finalVersion = versionOpt.orElseThrow(() -> new RuntimeException("No version found"));
 
@@ -613,98 +613,98 @@ public final class PomParser extends DefaultHandler {
         List<Handler> handlers = new ArrayList<>();
         handlers.addAll(List.of(
                 content(
-                        List.of("groupId", "pomInfo"),
+                        List.of("groupId", "project"),
                         (state, content) ->
                                 state.groupId = content
                 ),
                 content(
-                        List.of("artifactId", "pomInfo"),
+                        List.of("artifactId", "project"),
                         (state, content) ->
                                 state.artifactIdOpt = Optional.of(content)
                 ),
                 content(
-                        List.of("version", "pomInfo"),
+                        List.of("version", "project"),
                         (state, content) ->
                                 state.version = content
                 ),
                 content(
-                        List.of("groupId", "parent", "pomInfo"),
+                        List.of("groupId", "parent", "project"),
                         (state, content) ->
                                 state.parentGroupIdOpt = Optional.of(content)
                 ),
                 content(
-                        List.of("artifactId", "parent", "pomInfo"),
+                        List.of("artifactId", "parent", "project"),
                         (state, content) ->
                                 state.parentArtifactIdOpt = Optional.of(content)
                 ),
                 content(
-                        List.of("version", "parent", "pomInfo"),
+                        List.of("version", "parent", "project"),
                         (state, content) ->
                                 state.parentVersion = content
                 ),
                 content(
-                        List.of("relativePath", "parent", "pomInfo"),
+                        List.of("relativePath", "parent", "project"),
                         (state, content) ->
                                 state.parentPathOpt = Optional.of(content)
                 ),
                 content(
-                        List.of("description", "pomInfo"),
+                        List.of("description", "project"),
                         (state, content) ->
                                 state.description = content
                 ),
 
                 content(
-                        List.of("url", "pomInfo"),
+                        List.of("url", "project"),
                         (state, content) ->
                                 state.url = content
                 ),
 
                 content(
-                        List.of("packaging", "pomInfo"),
+                        List.of("packaging", "project"),
                         (state, content) ->
                                 state.packagingOpt = Optional.of(new Type(content))
                 ),
                 content(
-                        List.of("groupId", "relocation", "distributionManagement", "pomInfo"),
+                        List.of("groupId", "relocation", "distributionManagement", "project"),
                         (state, content) ->
                                 state.relocationGroupIdOpt = Optional.of(
                                         new GroupId(content)
                                 )
                 ),
                 content(
-                        List.of("artifactId", "relocation", "distributionManagement", "pomInfo"),
+                        List.of("artifactId", "relocation", "distributionManagement", "project"),
                         (state, content) ->
                                 state.relocationArtifactIdOpt = Optional.of(
                                         new ArtifactId(content)
                                 )
                 ),
                 content(
-                        List.of("version", "relocation", "distributionManagement", "pomInfo"),
+                        List.of("version", "relocation", "distributionManagement", "project"),
                         (state, content) ->
                                 state.relocationVersionOpt = Optional.of(content)
                 )
         ));
 
         handlers.addAll(dependencyHandlers(
-                LL.fromJavaList(List.of("dependency", "dependencies", "pomInfo")),
+                LL.fromJavaList(List.of("dependency", "dependencies", "project")),
                 (state, configuration, dependency) ->
                         state.dependencies.add(new Tuple2<>(configuration, dependency))
         ));
 
         handlers.addAll(dependencyHandlers(
-                LL.fromJavaList(List.of("dependency", "dependencies", "dependencyManagement", "pomInfo")),
+                LL.fromJavaList(List.of("dependency", "dependencies", "dependencyManagement", "project")),
                 (state, configuration, dependency) ->
                         state.dependencyManagement.add(new Tuple2<>(configuration, dependency))
         ));
 
         handlers.addAll(propertyHandlers(
-                LL.fromJavaList(List.of("properties", "pomInfo")),
+                LL.fromJavaList(List.of("properties", "project")),
                 (state, key, value) ->
                         state.properties.put(key, value)
         ));
 
         handlers.addAll(profileHandlers(
-                LL.fromJavaList(List.of("profile", "profiles", "pomInfo")),
+                LL.fromJavaList(List.of("profile", "profiles", "project")),
                 (state, profile) ->
                         state.profiles.add(profile)
         ));
