@@ -1,5 +1,6 @@
 package dev.mccue.resolve.maven;
 
+import dev.mccue.resolve.api.Repository;
 import dev.mccue.resolve.core.*;
 import dev.mccue.resolve.doc.Coursier;
 import dev.mccue.resolve.doc.Incomplete;
@@ -7,6 +8,7 @@ import dev.mccue.resolve.doc.MavenSpecific;
 import dev.mccue.resolve.util.Tuple2;
 import org.xml.sax.SAXException;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -55,16 +57,14 @@ public record PomInfo(
         return new Tuple2<>(module, version);
     }
 
-    public Project toProject() {
-        var repository = new MavenRepository();
-        var project = new Project(module, version, dependencies, configurations, dependencyManagement,
-                properties, profiles, versions, snapshotVersioning, packagingOpt,
-                relocated, actualVersionOpt, publications);
+    public Project toProject(Repository repository) {
+        Map<String, String> properties = new HashMap<>();
         parent.ifPresent(parent -> {
             try {
-                var parentProject = PomParser.parsePom(repository.getPom(new Dependency(parent.first(), parent.second()))).toProject();
-                project.dependencies().addAll(parentProject.dependencies());
-                project.properties().putAll(parentProject.properties());
+                var parentProject = PomParser.parsePom(repository.getPom(new Dependency(parent.first(), parent.second()))).toProject(repository);
+                dependencies().addAll(parentProject.dependencies());
+                properties.putAll(this.properties);
+                properties.putAll(parentProject.properties());
             } catch (SAXException e) {
                 throw new RuntimeException(e);
             } catch (ModelParseException e) {
@@ -72,6 +72,9 @@ public record PomInfo(
             }
             //combine projects
         });
+        var project = new Project(module, version, dependencies, configurations, dependencyManagement,
+                properties, profiles, versions, snapshotVersioning, packagingOpt,
+                relocated, actualVersionOpt, publications);
         return project;
     }
 }

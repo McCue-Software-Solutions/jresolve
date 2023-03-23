@@ -19,110 +19,15 @@ import dev.mccue.resolve.util.Tuple2;
 public class PomInfoTest {
 
     @Test
-    public void ParseBasicParentPom() throws SAXException{
-        var basicPom = """
-                <?xml version="1.0" encoding="UTF-8"?>
-                <pomInfo xmlns="http://maven.apache.org/POM/4.0.0"
-                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-                    <modelVersion>4.0.0</modelVersion>
-                                
-                    <groupId>dev.test</groupId>
-                    <artifactId>test-pom</artifactId>
-                    <version>0.0.1</version>
-                    <packaging>jar</packaging>
-                                
-                    <parent>
-                        <groupId>dev.mccue</groupId>
-                        <artifactId>resolve</artifactId>
-                        <version>0.0.1</version>
-                    </parent> 
-
-                    <properties>
-                        <pomInfo.build.sourceEncoding>UTF-8</pomInfo.build.sourceEncoding>
-                    </properties>
-                                
-                    <build>
-                        <plugins>
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-compiler-plugin</artifactId>
-                                <version>3.8.1</version>
-                                <configuration>
-                                    <source>19</source>
-                                    <target>19</target>
-                                    <compilerArgs>--enable-preview</compilerArgs>
-                                </configuration>
-                            </plugin>
-                                
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-source-plugin</artifactId>
-                                <version>3.0.1</version>
-                                <executions>
-                                    <execution>
-                                        <id>attach-sources</id>
-                                        <goals>
-                                            <goal>jar</goal>
-                                        </goals>
-                                    </execution>
-                                </executions>
-                            </plugin>
-                                
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-javadoc-plugin</artifactId>
-                                <version>3.2.0</version>
-                                <executions>
-                                    <execution>
-                                        <id>attach-javadocs</id>
-                                        <goals>
-                                            <goal>jar</goal>
-                                        </goals>
-                                    </execution>
-                                </executions>
-                            </plugin>
-                                
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-surefire-plugin</artifactId>
-                                <version>3.0.0-M7</version>
-                                <configuration>
-                                    <argLine>@{argLine} --enable-preview</argLine>
-                                </configuration>
-                            </plugin>
-                                
-                            <plugin>
-                                <groupId>org.jacoco</groupId>
-                                <artifactId>jacoco-maven-plugin</artifactId>
-                                <version>0.8.8</version>
-                                <executions>
-                                    <execution>
-                                        <id>jacoco-initialize</id>
-                                        <goals>
-                                            <goal>prepare-agent</goal>
-                                        </goals>
-                                    </execution>
-                                    <execution>
-                                        <id>jacoco-site</id>
-                                        <phase>test</phase>
-                                        <goals>
-                                            <goal>report</goal>
-                                        </goals>
-                                    </execution>
-                                </executions>
-                            </plugin>
-                        </plugins>
-                    </build>
-                </pomInfo>
-                """;
+    public void ParseBasicParentPom() throws SAXException {
         try {
-            var project = PomParser.parsePom(new ByteArrayInputStream(basicPom.getBytes(StandardCharsets.UTF_8))).toProject();
+            var repository = new MockRepository("pomInfo");
+            var project = PomParser.parsePom(repository.getPom(new Dependency("dev.test", "test.pom", "0.0.1"))).toProject(repository);
 
             assertEquals(new GroupId("dev.test"), project.module().groupId());
-            assertEquals(new ArtifactId("test-pom"), project.module().artifactId());
+            assertEquals(new ArtifactId("test.pom"), project.module().artifactId());
             assertEquals("0.0.1", project.version());
-            assertEquals(Map.of("pomInfo.build.sourceEncoding", "UTF-8"), project.properties());
+            assertEquals(Map.of("project.build.sourceEncoding", "UTF-8"), project.properties());
             assertEquals(Optional.of(Type.JAR), project.packagingOpt());
 
             assertEquals(List.of(

@@ -73,7 +73,7 @@ public final class PomParserTest {
                             "5.9.0"
                     ))
             ), project.dependencies());
-        } catch (ModelParseException e) { 
+        } catch (ModelParseException e) {
         }
     }
 }
