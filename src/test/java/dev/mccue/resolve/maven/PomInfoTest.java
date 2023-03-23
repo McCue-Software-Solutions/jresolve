@@ -117,7 +117,7 @@ public class PomInfoTest {
                 </pomInfo>
                 """;
         try {
-            var project = PomParser.parsePom(new ByteArrayInputStream(basicPom.getBytes(StandardCharsets.UTF_8)));
+            var project = PomParser.parsePom(new ByteArrayInputStream(basicPom.getBytes(StandardCharsets.UTF_8))).toProject();
 
             assertEquals(new GroupId("dev.test"), project.module().groupId());
             assertEquals(new ArtifactId("test-pom"), project.module().artifactId());
