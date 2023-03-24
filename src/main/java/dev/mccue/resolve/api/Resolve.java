@@ -18,6 +18,7 @@ public class Resolve {
 
     public Resolve(Repository repository) {
         this.repository = repository;
+        dependencies = new DependencyGraph(repository);
     }
 
     public Resolve addDependency(Dependency dep) throws ModelParseException, SAXException {
@@ -26,48 +27,52 @@ public class Resolve {
     }
 
     public void run() throws SAXException, ModelParseException {
-        recursiveAddDependencies(dependencies);
+//        recursiveAddDependencies(dependencies);
 
-        for (Dependency dependency : dependencies) {
-            repository.download(dependency, Extension.POM, Classifier.EMPTY);
-            repository.download(dependency, Extension.JAR, Classifier.EMPTY);
+//        for (Dependency dependency : dependencies) {
+//            repository.download(dependency, Extension.POM, Classifier.EMPTY);
+//            repository.download(dependency, Extension.JAR, Classifier.EMPTY);
+//        }
+        var d = dependencies.listDependencies();
+        for (Dependency dep : d) {
+            System.out.println(dep);
         }
 
         System.out.println(dependencies);
     }
 
-    private void recursiveAddDependencies(ArrayList<Dependency> recursiveDependencies) throws SAXException, ModelParseException {
-        var newDependencies = new ArrayList<Dependency>();
-        for (Dependency dep : recursiveDependencies) {
-            for (Dependency found : getDependentPoms(dep)) {
-                var alreadySeen = dependencies.stream()
-                        .anyMatch(dependency1 ->
-                                dependency1.library().equals(found.library()) &&
-                                        dependency1.version().equals(found.version())
-                        );
-                if (!alreadySeen) {
-                    newDependencies.add(found);
-                }
-            }
-        }
-        dependencies.addAll(newDependencies);
+//    private void recursiveAddDependencies(ArrayList<Dependency> recursiveDependencies) throws SAXException, ModelParseException {
+//        var newDependencies = new ArrayList<Dependency>();
+//        for (Dependency dep : recursiveDependencies) {
+//            for (Dependency found : getDependentPoms(dep)) {
+//                var alreadySeen = dependencies.stream()
+//                        .anyMatch(dependency1 ->
+//                                dependency1.library().equals(found.library()) &&
+//                                        dependency1.version().equals(found.version())
+//                        );
+//                if (!alreadySeen) {
+//                    newDependencies.add(found);
+//                }
+//            }
+//        }
+//        dependencies.addAll(newDependencies);
+//
+//        if (!newDependencies.isEmpty()) {
+//            recursiveAddDependencies(newDependencies);
+//        }
+//    }
 
-        if (!newDependencies.isEmpty()) {
-            recursiveAddDependencies(newDependencies);
-        }
-    }
-
-    public ArrayList<Dependency> getDependentPoms(Dependency dependency) throws SAXException, ModelParseException {
-        var project = PomParser.parsePom(repository.getPom(dependency));
-
-        var foundDependencies = new ArrayList<Dependency>();
-        for (Tuple2<Configuration, Dependency> dep : project.dependencies()) {
-            if (dep.first() == Configuration.EMPTY) {
-                foundDependencies.add(dep.second());
-            }
-        }
-        return foundDependencies;
-    }
+//    public ArrayList<Dependency> getDependentPoms(Dependency dependency) throws SAXException, ModelParseException {
+//        var project = PomParser.parsePom(repository.getPom(dependency));
+//
+//        var foundDependencies = new ArrayList<Dependency>();
+//        for (Tuple2<Configuration, Dependency> dep : project.dependencies()) {
+//            if (dep.first() == Configuration.EMPTY) {
+//                foundDependencies.add(dep.second());
+//            }
+//        }
+//        return foundDependencies;
+//    }
 
     public static void main(String[] args) throws IOException, InterruptedException, ParserConfigurationException, SAXException, ModelParseException {
         var r = new Resolve(new MavenRepository())
