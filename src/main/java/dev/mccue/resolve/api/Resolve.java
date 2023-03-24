@@ -1,9 +1,6 @@
 package dev.mccue.resolve.api;
 
-import dev.mccue.resolve.core.Classifier;
-import dev.mccue.resolve.core.Configuration;
-import dev.mccue.resolve.core.Dependency;
-import dev.mccue.resolve.core.Extension;
+import dev.mccue.resolve.core.*;
 import dev.mccue.resolve.maven.MavenRepository;
 import dev.mccue.resolve.maven.ModelParseException;
 import dev.mccue.resolve.maven.PomParser;
@@ -16,16 +13,15 @@ import java.util.ArrayList;
 
 
 public class Resolve {
-    private ArrayList<Dependency> dependencies;
+    private DependencyGraph dependencies;
     private Repository repository;
 
     public Resolve(Repository repository) {
-        dependencies = new ArrayList<>();
         this.repository = repository;
     }
 
-    public Resolve addDependency(Dependency dep) {
-        dependencies.add(dep);
+    public Resolve addDependency(Dependency dep) throws ModelParseException, SAXException {
+        dependencies.addDependency(dep);
         return this;
     }
 
@@ -36,6 +32,8 @@ public class Resolve {
             repository.download(dependency, Extension.POM, Classifier.EMPTY);
             repository.download(dependency, Extension.JAR, Classifier.EMPTY);
         }
+
+        System.out.println(dependencies);
     }
 
     private void recursiveAddDependencies(ArrayList<Dependency> recursiveDependencies) throws SAXException, ModelParseException {

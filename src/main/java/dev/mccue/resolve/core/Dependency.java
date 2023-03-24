@@ -98,4 +98,16 @@ public record Dependency(
                 this.optional,
                 this.transitive);
     }
+
+    public String getVersion() {
+        return this.version;
+    }
+
+    public Library getLibrary() {
+        return this.library;
+    }
+
+    public int compareVersion(Dependency other) {
+        return this.version.compareTo(other.version);
+    }
 }
