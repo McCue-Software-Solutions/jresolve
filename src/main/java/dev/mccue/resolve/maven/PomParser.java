@@ -199,21 +199,6 @@ public final class PomParser extends DefaultHandler {
                 throw new RuntimeException("No parent version found");
             }
 
-            var dependencies0 = new ArrayList<Tuple2<Configuration, Dependency>>();
-            for (var dependency : dependencies) {
-                final var matcher = Pattern.compile("\\$\\{(.*?)\\}").matcher(dependency.second().version());
-                if (matcher.find()) {
-                        final var variable = matcher.group(1);
-                        if (state.properties.containsKey(variable)) {
-                               dependencies0.add(new Tuple2<Configuration, Dependency>(dependency.first(), dependency.second().withVersion(matcher.replaceAll(state.properties.get(variable))))); 
-                        } else {
-                                throw new ModelParseException("Undefined variable " + variable + " used in the POM");
-                        }
-                } else {
-                        dependencies0.add(dependency);
-                }
-            }
-
             // TODO
             for (var entry : properties0.entrySet()) {
                 if ("extraDependencyAttributes".equals(entry.getKey())) {
@@ -242,7 +227,7 @@ public final class PomParser extends DefaultHandler {
             return new PomInfo(
                     projModule,
                     finalVersion,
-                    dependencies0, // TODO
+                    dependencies, // TODO
                     Map.of(),
                     parentOpt,
                     List.copyOf(dependencyManagement),

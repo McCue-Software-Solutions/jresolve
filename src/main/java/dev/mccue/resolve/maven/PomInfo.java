@@ -8,10 +8,12 @@ import dev.mccue.resolve.doc.MavenSpecific;
 import dev.mccue.resolve.util.Tuple2;
 import org.xml.sax.SAXException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Incomplete
 @Coursier("https://github.com/coursier/coursier/blob/f5f0870/modules/core/shared/src/main/scala/coursier/core/Definitions.scala#L228-L268")
@@ -65,6 +67,21 @@ public record PomInfo(
                 dependencies().addAll(parentProject.dependencies());
                 properties.putAll(this.properties);
                 properties.putAll(parentProject.properties());
+
+                var dependencies0 = new ArrayList<Tuple2<Configuration, Dependency>>();
+                for (var dependency : dependencies) {
+                    final var matcher = Pattern.compile("\\$\\{(.*?)\\}").matcher(dependency.second().version());
+                    if (matcher.find()) {
+                            final var variable = matcher.group(1);
+                            if (properties.containsKey(variable)) {
+                                dependencies0.add(new Tuple2<Configuration, Dependency>(dependency.first(), dependency.second().withVersion(matcher.replaceAll(properties.get(variable))))); 
+                            } else {
+                                    throw new ModelParseException("Undefined variable " + variable + " used in the POM");
+                            }
+                    } else {
+                            dependencies0.add(dependency);
+                    }
+                }
             } catch (SAXException e) {
                 throw new RuntimeException(e);
             } catch (ModelParseException e) {
