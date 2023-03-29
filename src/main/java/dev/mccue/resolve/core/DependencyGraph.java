@@ -65,6 +65,8 @@ public final class DependencyGraph {
             if (currentNode.dependency().compareVersion(node.dependency()) < 0) {    //compare versions
                 this.removeDependency(currentNode.dependency());    //remove lower version
                 deps.put(node.dependency().getLibrary(), node);     //replace node with higher version
+            } else {
+                return;
             }
         }
 
