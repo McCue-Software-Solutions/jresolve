@@ -60,13 +60,16 @@ public record PomInfo(
     }
 
     public Project toProject(Repository repository) {
-        Map<String, String> properties = new HashMap<>();
+        Map<String, String> properties0 = new HashMap<>();
         parent.ifPresent(parent -> {
             try {
                 var parentProject = PomParser.parsePom(repository.getPom(new Dependency(parent.first(), parent.second()))).toProject(repository);
                 dependencies().addAll(parentProject.dependencies());
-                properties.putAll(this.properties);
-                properties.putAll(parentProject.properties());
+
+                properties0.putAll(parentProject.properties());
+                properties0.putAll(this.properties);
+                System.out.println(this.module);
+                System.out.println(properties0);
 
                 var dependencies0 = new ArrayList<Tuple2<Configuration, Dependency>>();
                 for (var dependency : dependencies) {
@@ -87,10 +90,9 @@ public record PomInfo(
             } catch (ModelParseException e) {
                 throw new RuntimeException(e);
             }
-            //combine projects
         });
         var project = new Project(module, version, dependencies, configurations, dependencyManagement,
-                properties, profiles, versions, snapshotVersioning, packagingOpt,
+                properties0, profiles, versions, snapshotVersioning, packagingOpt,
                 relocated, actualVersionOpt, publications);
         return project;
     }
