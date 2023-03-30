@@ -41,6 +41,10 @@ public class Resolve {
         System.out.println(dependencies);
     }
 
+    public ArrayList<Dependency> listDependencies() {
+        return dependencies.listDependencies();
+    }
+
 //    private void recursiveAddDependencies(ArrayList<Dependency> recursiveDependencies) throws SAXException, ModelParseException {
 //        var newDependencies = new ArrayList<Dependency>();
 //        for (Dependency dep : recursiveDependencies) {
@@ -76,7 +80,9 @@ public class Resolve {
 
     public static void main(String[] args) throws IOException, InterruptedException, ParserConfigurationException, SAXException, ModelParseException {
         var r = new Resolve(new MavenRepository())
-                .addDependency(new Dependency("org.clojure", "clojure", "1.11.0"));
+//                .addDependency(new Dependency("org.clojure", "core.specs.alpha", "0.2.62"));
+                .addDependency(new Dependency("jresolve.test", "first.solo.dep", "1.0.0"));
+//                .addDependency(new Dependency("org.clojure", "clojure", "1.11.0"));
         r.run();
     }
 

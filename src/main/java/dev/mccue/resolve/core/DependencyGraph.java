@@ -112,14 +112,21 @@ public final class DependencyGraph {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+        int first = 1;
 
         for (Library v : deps.keySet()) {
             var dep = deps.get(v).dependency();
             builder.append(dep.library()).append(" ").append(dep.version()).append(" \033[1;37m").append("requires").append("\033[0m { ");
             for (Dependency w : deps.get(v).childrenNodes()) {
-                builder.append("[").append(w.library()).append(" ").append(w.version()).append("]").append(" , ");
+                if (first == 1) {
+                    builder.append("[").append(w.library()).append(" ").append(w.version()).append("]");
+                    first = 0;
+                } else {
+                    builder.append(" , ").append("[").append(w.library()).append(" ").append(w.version()).append("]");
+                }
             }
             builder.append(" }\n");
+            first = 1;
         }
 
         return (builder.toString());
