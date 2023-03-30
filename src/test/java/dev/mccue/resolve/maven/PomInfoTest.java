@@ -53,8 +53,23 @@ public class PomInfoTest {
             var repository = new MockRepository("pomInfo");
             var project = PomParser.parsePom(repository.getPom(new Dependency("dev.test", "child", "0.0.1"))).toProject(repository);
 
-            assertEquals(Map.of("project.build.sourceEncoding", "UTF-8"), project.properties());
-
+            assertEquals(Map.of("project.build.sourceEncoding", "UTF-8", "junit.version.one", "5.9.0", "junit.version.two", "5.9"), project.properties());
+            assertEquals(List.of(
+                    new Tuple2<>(Configuration.TEST, new Dependency(
+                            new Library(
+                                    new GroupId("org.junit.jupiter"),
+                                    new ArtifactId("junit-jupiter-api")
+                            ),
+                            "5.9.0"
+                    )),
+                    new Tuple2<>(Configuration.TEST, new Dependency(
+                            new Library(
+                                    new GroupId("org.junit.jupiter"),
+                                    new ArtifactId("junit-jupiter-params")
+                            ),
+                            "5.9.0"
+                    ))
+            ), project.dependencies());
         } catch (ModelParseException e) { }
 
     }
