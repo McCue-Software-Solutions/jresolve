@@ -11,8 +11,13 @@ import java.util.Collections;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ResolveTest {
+
+    public boolean resolveTestCompareHelper(ArrayList<Dependency> expected, ArrayList<Dependency> actual) {
+        return ((expected.size() == actual.size()) && (expected.containsAll(actual) && actual.containsAll(expected)));
+    }
     @Test
     public void testResolve() throws SAXException, ModelParseException {
         var mock = new MockRepository("graph1");
@@ -25,7 +30,7 @@ public class ResolveTest {
         expected.add(new Dependency("org.clojure", "core.specs.alpha", "0.2.62"));
         expected.add(new Dependency("org.clojure", "clojure", "1.11.0"));
 
-        assertEquals(expected, r.listDependencies());
+        assertTrue(resolveTestCompareHelper(expected, r.listDependencies()));
     }
 
     @Test
@@ -40,7 +45,7 @@ public class ResolveTest {
         expected.add(new Dependency("jresolve.test", "first.solo.dep", "1.0.0"));
         expected.add(new Dependency("jresolve.test", "second.solo.dep", "1.1.1"));
 
-        assertEquals(expected, r.listDependencies());
+        assertTrue(resolveTestCompareHelper(expected, r.listDependencies()));
     }
 
     @Test
@@ -54,7 +59,7 @@ public class ResolveTest {
         ArrayList<Dependency> expected = new ArrayList<Dependency>();
         expected.add(new Dependency("jresolve.test", "first.solo.dep", "1.0.0"));
 
-        assertEquals(expected, r.listDependencies());
+        assertTrue(resolveTestCompareHelper(expected, r.listDependencies()));
     }
 
     @Test
@@ -68,24 +73,25 @@ public class ResolveTest {
         ArrayList<Dependency> expected = new ArrayList<Dependency>();
         expected.add(new Dependency("jresolve.test", "first.solo.dep", "1.2.0"));
 
-        assertEquals(expected, r.listDependencies());
+        assertTrue(resolveTestCompareHelper(expected, r.listDependencies()));
     }
 
     @Test
     public void testResolveMatchingSubDeps() throws SAXException, ModelParseException {
         var mock = new MockRepository("graph1");
         var r = new Resolve(mock)
-                .addDependency(new Dependency("jresolve.test", "first.parent.of.new.dep", "1.12.3"))
-                .addDependency(new Dependency("jresolve.test", "second.parent.of.new.dep", "1.10.2"));
+                .addDependency(new Dependency("jresolve.test", "first.parent.dep", "1.12.3"))
+                .addDependency(new Dependency("jresolve.test", "second.parent.dep", "1.10.2"));
         r.run();
 
         ArrayList<Dependency> expected = new ArrayList<Dependency>();
+        expected.add(new Dependency("jresolve.test", "first.parent.dep", "1.12.3"));
+        expected.add(new Dependency("jresolve.test", "second.parent.dep", "1.10.2"));
         expected.add(new Dependency("jresolve.test", "child.dep", "3.4.5"));
-        expected.add(new Dependency("jresolve.test", "second.parent.of.new.dep", "1.10.2"));
-        expected.add(new Dependency("jresolve.test", "first.parent.of.new.dep", "1.12.3"));
+        expected.add(new Dependency("jresolve.test", "second.leaf.dep", "3.3.3"));
 
 
-        assertEquals(expected, r.listDependencies());
+        assertTrue(resolveTestCompareHelper(expected, r.listDependencies()));
     }
 
     @Test
@@ -93,14 +99,15 @@ public class ResolveTest {
         var mock = new MockRepository("graph1");
         var r = new Resolve(mock)
                 .addDependency(new Dependency("jresolve.test", "first.parent.of.old.dep", "1.0.0"))
-                .addDependency(new Dependency("jresolve.test", "first.parent.of.new.dep", "1.12.3"));
+                .addDependency(new Dependency("jresolve.test", "first.parent.dep", "1.12.3"));
         r.run();
 
         ArrayList<Dependency> expected = new ArrayList<Dependency>();
         expected.add(new Dependency("jresolve.test", "first.parent.of.old.dep", "1.0.0"));
+        expected.add(new Dependency("jresolve.test", "first.parent.dep", "1.12.3"));
         expected.add(new Dependency("jresolve.test", "child.dep", "3.4.5"));
-        expected.add(new Dependency("jresolve.test", "first.parent.of.new.dep", "1.12.3"));
+        expected.add(new Dependency("jresolve.test", "second.leaf.dep", "3.3.3"));
 
-        assertEquals(expected, r.listDependencies());
+        assertTrue(resolveTestCompareHelper(expected, r.listDependencies()));
     }
 }

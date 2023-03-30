@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>jresolve.test</groupId>
-    <artifactId>first.parent.of.new.dep</artifactId>
-    <version>1.12.3</version>
-    <name>first.parent.of.new.dep</name>
-    <description>Used to represent a parent dep that requires the newer child dep</description>
+    <artifactId>second.parent.dep</artifactId>
+    <version>1.10.2</version>
+    <name>second.parent.dep</name>
+    <description>Used to represent a second parent dep that requires the newer child dep</description>
 
     <dependencies>
         <dependency>
