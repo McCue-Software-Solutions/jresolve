@@ -1,8 +1,6 @@
 package dev.mccue.resolve.maven;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import java.io.ByteArrayInputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -47,5 +45,17 @@ public class PomInfoTest {
                     ))
             ), project.dependencies());
         } catch (ModelParseException e) { }
+    }
+
+    @Test
+    public void ParseSecondParentPom() throws SAXException {
+        try {
+            var repository = new MockRepository("pomInfo");
+            var project = PomParser.parsePom(repository.getPom(new Dependency("dev.test", "child", "0.0.1"))).toProject(repository);
+
+            assertEquals(Map.of("project.build.sourceEncoding", "UTF-8"), project.properties());
+
+        } catch (ModelParseException e) { }
+
     }
 }

@@ -15,7 +15,6 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.regex.Pattern;
 
 public final class PomParser extends DefaultHandler {
     public static PomInfo parsePom(InputStream pom) throws SAXException, ModelParseException {
