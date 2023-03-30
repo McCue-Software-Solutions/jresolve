@@ -10,7 +10,7 @@
     <dependencies>
         <dependency>
             <groupId>jresolve.test</groupId>
-            <artifactId>child.new.dep</artifactId>
+            <artifactId>child.dep</artifactId>
             <version>3.4.5</version>
         </dependency>
     </dependencies>

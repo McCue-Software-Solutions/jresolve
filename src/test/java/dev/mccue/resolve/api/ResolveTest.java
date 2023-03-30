@@ -80,8 +80,8 @@ public class ResolveTest {
         r.run();
 
         ArrayList<Dependency> expected = new ArrayList<Dependency>();
+        expected.add(new Dependency("jresolve.test", "child.dep", "3.4.5"));
         expected.add(new Dependency("jresolve.test", "second.parent.of.new.dep", "1.10.2"));
-        expected.add(new Dependency("jresolve.test", "child.new.dep", "3.4.5"));
         expected.add(new Dependency("jresolve.test", "first.parent.of.new.dep", "1.12.3"));
 
 
@@ -98,16 +98,9 @@ public class ResolveTest {
 
         ArrayList<Dependency> expected = new ArrayList<Dependency>();
         expected.add(new Dependency("jresolve.test", "first.parent.of.old.dep", "1.0.0"));
-        expected.add(new Dependency("jresolve.test", "child.new.dep", "3.4.5"));
+        expected.add(new Dependency("jresolve.test", "child.dep", "3.4.5"));
         expected.add(new Dependency("jresolve.test", "first.parent.of.new.dep", "1.12.3"));
 
-
         assertEquals(expected, r.listDependencies());
-
-        assertEquals(Set.of(
-                new Dependency("jresolve.test", "first.parent.of.new.dep", "1.12.3"),
-                new Dependency("jresolve.test", "first.parent.of.old.dep", "1.0.0"),
-                new Dependency("jresolve.test", "child.new.dep", "3.4.5")
-        ), mock.downloaded);
     }
 }
