@@ -7,22 +7,22 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public final class MinimizedExclusionsTest {
+public final class ExclusionsTest {
     @Test
     public void emptyExclusionsToSet() {
-        assertEquals(MinimizedExclusions.NONE.toSet(), Set.of());
+        assertEquals(Exclusions.NONE.toSet(), Set.of());
     }
 
     @Test
     public void allExclusionsToSet() {
-        assertEquals(MinimizedExclusions.ALL.toSet(), Set.of(
+        assertEquals(Exclusions.ALL.toSet(), Set.of(
                 new Exclusion(GroupId.ALL, ArtifactId.ALL)
         ));
     }
 
     @Test
     public void regularExclusionsToSet() {
-        var exclusions = MinimizedExclusions.of(Set.of(
+        var exclusions = Exclusions.of(Set.of(
                 new Exclusion(new GroupId("apple"), ArtifactId.ALL),
                 new Exclusion(GroupId.ALL, new ArtifactId("metaverse")),
                 new Exclusion(new GroupId("com.google"), new ArtifactId("abc"))
@@ -38,7 +38,7 @@ public final class MinimizedExclusionsTest {
     @Test
     public void allModuleExclusionsReplaceMoreSpecificExclusions() {
         assertEquals(
-                MinimizedExclusions.of(Set.of(
+                Exclusions.of(Set.of(
                         new Exclusion(new GroupId("facebook"), new ArtifactId("metaverse")),
                         new Exclusion(new GroupId("facebook"), ArtifactId.ALL)
                 )).toSet(),
@@ -49,7 +49,7 @@ public final class MinimizedExclusionsTest {
     @Test
     public void allOrganizationExclusionsReplaceMoreSpecificExclusions() {
         assertEquals(
-                MinimizedExclusions.of(Set.of(
+                Exclusions.of(Set.of(
                         new Exclusion(GroupId.ALL, new ArtifactId("metaverse")),
                         new Exclusion(new GroupId("facebook"), new ArtifactId("metaverse")),
                         new Exclusion(new GroupId("facebook"), new ArtifactId("whatever"))
@@ -64,26 +64,26 @@ public final class MinimizedExclusionsTest {
     @Test
     public void joiningWithAllExclusionsGetsJustAllExclusions() {
         assertEquals(
-                MinimizedExclusions.of(Set.of(Exclusion.ALL)),
-                MinimizedExclusions.of(Set.of(Exclusion.ALL)).join(
-                    MinimizedExclusions.of(
-                            Set.of(
-                                    new Exclusion(new GroupId("facebook"), new ArtifactId("metaverse")),
-                                    new Exclusion(new GroupId("facebook"), new ArtifactId("whatever"))
-                            )
-                    )
+                Exclusions.of(Set.of(Exclusion.ALL)),
+                Exclusions.of(Set.of(Exclusion.ALL)).join(
+                        Exclusions.of(
+                                Set.of(
+                                        new Exclusion(new GroupId("facebook"), new ArtifactId("metaverse")),
+                                        new Exclusion(new GroupId("facebook"), new ArtifactId("whatever"))
+                                )
+                        )
                 )
         );
 
         assertEquals(
-                MinimizedExclusions.of(Set.of(Exclusion.ALL)),
-                MinimizedExclusions.of(
+                Exclusions.of(Set.of(Exclusion.ALL)),
+                Exclusions.of(
                         Set.of(
                                 new Exclusion(new GroupId("facebook"), new ArtifactId("metaverse")),
                                 new Exclusion(new GroupId("facebook"), new ArtifactId("whatever"))
                         )
                 ).join(
-                        MinimizedExclusions.of(Set.of(
+                        Exclusions.of(Set.of(
                                 new Exclusion(GroupId.ALL, ArtifactId.ALL)
                         ))
                 )
@@ -92,20 +92,20 @@ public final class MinimizedExclusionsTest {
 
     @Test
     public void excludeAllExcludesAll() {
-        assertFalse(MinimizedExclusions.ALL.shouldInclude(new GroupId("facebook"), new ArtifactId("metaverse")));
-        assertFalse(MinimizedExclusions.ALL.shouldInclude(new GroupId("abc"), new ArtifactId("def")));
+        assertFalse(Exclusions.ALL.shouldInclude(new GroupId("facebook"), new ArtifactId("metaverse")));
+        assertFalse(Exclusions.ALL.shouldInclude(new GroupId("abc"), new ArtifactId("def")));
     }
 
     @Test
     public void excludeNoneExcludesNone() {
-        assertTrue(MinimizedExclusions.NONE.shouldInclude(new GroupId("facebook"), new ArtifactId("metaverse")));
-        assertTrue(MinimizedExclusions.NONE.shouldInclude(new GroupId("abc"), new ArtifactId("def")));
+        assertTrue(Exclusions.NONE.shouldInclude(new GroupId("facebook"), new ArtifactId("metaverse")));
+        assertTrue(Exclusions.NONE.shouldInclude(new GroupId("abc"), new ArtifactId("def")));
     }
 
     @Test
     public void excludeSpecificDep() {
-        var excl = MinimizedExclusions.of(List.of(
-                        new Exclusion(new GroupId("facebook"), new ArtifactId("metaverse"))
+        var excl = Exclusions.of(List.of(
+                new Exclusion(new GroupId("facebook"), new ArtifactId("metaverse"))
         ));
         assertFalse(excl.shouldInclude(new GroupId("facebook"), new ArtifactId("metaverse")));
         assertTrue(excl.shouldInclude(new GroupId("abc"), new ArtifactId("def")));
@@ -115,7 +115,7 @@ public final class MinimizedExclusionsTest {
 
     @Test
     public void excludeAllWithArtifact() {
-        var excl = MinimizedExclusions.of(List.of(
+        var excl = Exclusions.of(List.of(
                 new Exclusion(new GroupId("*"), new ArtifactId("metaverse"))
         ));
         assertFalse(excl.shouldInclude(new GroupId("facebook"), new ArtifactId("metaverse")));
@@ -126,7 +126,7 @@ public final class MinimizedExclusionsTest {
 
     @Test
     public void excludeAllInGroup() {
-        var excl = MinimizedExclusions.of(List.of(
+        var excl = Exclusions.of(List.of(
                 new Exclusion(new GroupId("google"), new ArtifactId("*"))
         ));
         assertFalse(excl.shouldInclude(new GroupId("google"), new ArtifactId("guice")));
@@ -138,20 +138,20 @@ public final class MinimizedExclusionsTest {
     @Test
     public void meetWithNone() {
         assertEquals(
-                MinimizedExclusions.NONE,
-                MinimizedExclusions.of(List.of(
+                Exclusions.NONE,
+                Exclusions.of(List.of(
                         new Exclusion(new GroupId("abc"), new ArtifactId("def"))
-                )).meet(MinimizedExclusions.NONE)
+                )).meet(Exclusions.NONE)
         );
 
         assertEquals(
-                MinimizedExclusions.NONE,
-                MinimizedExclusions.ALL.meet(MinimizedExclusions.NONE)
+                Exclusions.NONE,
+                Exclusions.ALL.meet(Exclusions.NONE)
         );
 
         assertEquals(
-                MinimizedExclusions.NONE,
-                MinimizedExclusions.NONE.meet(MinimizedExclusions.NONE)
+                Exclusions.NONE,
+                Exclusions.NONE.meet(Exclusions.NONE)
         );
     }
 }

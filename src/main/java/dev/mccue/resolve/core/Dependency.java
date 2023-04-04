@@ -12,7 +12,7 @@ public record Dependency(
         Library library,
         String version,
         Configuration configuration,
-        MinimizedExclusions minimizedExclusions,
+        Exclusions exclusions,
         Publication publication,
         boolean optional,
         boolean transitive
@@ -21,7 +21,7 @@ public record Dependency(
             Library library,
             String version,
             Configuration configuration,
-            MinimizedExclusions minimizedExclusions,
+            Exclusions exclusions,
             Publication publication,
             boolean optional,
             boolean transitive
@@ -37,8 +37,8 @@ public record Dependency(
                 configuration,
                 "configuration must not be null"
         );
-        this.minimizedExclusions = Objects.requireNonNull(
-                minimizedExclusions,
+        this.exclusions = Objects.requireNonNull(
+                exclusions,
                 "minimizedExclusions must not be null"
         );
         this.publication = Objects.requireNonNull(
@@ -57,7 +57,7 @@ public record Dependency(
                 library,
                 version,
                 Configuration.EMPTY,
-                MinimizedExclusions.NONE,
+                Exclusions.NONE,
                 Publication.EMPTY,
                 false,
                 true
@@ -77,7 +77,7 @@ public record Dependency(
                 library,
                 version,
                 configuration,
-                MinimizedExclusions.of(exclusions),
+                Exclusions.of(exclusions),
                 attributes.publication("", Extension.EMPTY),
                 optional,
                 transitive
@@ -93,7 +93,7 @@ public record Dependency(
                 this.library,
                 version,
                 this.configuration,
-                this.minimizedExclusions,
+                this.exclusions,
                 this.publication,
                 this.optional,
                 this.transitive);
