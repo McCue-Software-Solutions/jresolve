@@ -40,7 +40,7 @@ public final class DependencyGraph {
         return deps.get(dep.getLibrary()).childrenNodes();
     }
 
-    public ArrayList<Dependency> getDependentPoms(Dependency dependency) throws SAXException, ModelParseException {
+    private ArrayList<Dependency> getDependentPoms(Dependency dependency) throws SAXException, ModelParseException {
         var project = PomParser.parsePom(this.repository.getPom(dependency));
 
         var foundDependencies = new ArrayList<Dependency>();
