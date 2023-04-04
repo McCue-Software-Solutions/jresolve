@@ -18,7 +18,7 @@ public class Resolve {
 
     public Resolve(Repository repository) {
         this.repository = repository;
-        dependencies = new DependencyGraph(repository);
+        dependencies = new DependencyGraph(this.repository);
     }
 
     public Resolve addDependency(Dependency dep) throws ModelParseException, SAXException {
@@ -26,13 +26,7 @@ public class Resolve {
         return this;
     }
 
-    public void run() throws SAXException, ModelParseException {
-//        recursiveAddDependencies(dependencies);
-
-//        for (Dependency dependency : dependencies) {
-//            repository.download(dependency, Extension.POM, Classifier.EMPTY);
-//            repository.download(dependency, Extension.JAR, Classifier.EMPTY);
-//        }
+    public void run() {
         var d = dependencies.listDependencies();
         for (Dependency dep : d) {
             System.out.println(dep);
@@ -45,44 +39,9 @@ public class Resolve {
         return dependencies.listDependencies();
     }
 
-//    private void recursiveAddDependencies(ArrayList<Dependency> recursiveDependencies) throws SAXException, ModelParseException {
-//        var newDependencies = new ArrayList<Dependency>();
-//        for (Dependency dep : recursiveDependencies) {
-//            for (Dependency found : getDependentPoms(dep)) {
-//                var alreadySeen = dependencies.stream()
-//                        .anyMatch(dependency1 ->
-//                                dependency1.library().equals(found.library()) &&
-//                                        dependency1.version().equals(found.version())
-//                        );
-//                if (!alreadySeen) {
-//                    newDependencies.add(found);
-//                }
-//            }
-//        }
-//        dependencies.addAll(newDependencies);
-//
-//        if (!newDependencies.isEmpty()) {
-//            recursiveAddDependencies(newDependencies);
-//        }
-//    }
-
-//    public ArrayList<Dependency> getDependentPoms(Dependency dependency) throws SAXException, ModelParseException {
-//        var project = PomParser.parsePom(repository.getPom(dependency));
-//
-//        var foundDependencies = new ArrayList<Dependency>();
-//        for (Tuple2<Configuration, Dependency> dep : project.dependencies()) {
-//            if (dep.first() == Configuration.EMPTY) {
-//                foundDependencies.add(dep.second());
-//            }
-//        }
-//        return foundDependencies;
-//    }
-
     public static void main(String[] args) throws IOException, InterruptedException, ParserConfigurationException, SAXException, ModelParseException {
         var r = new Resolve(new MavenRepository())
-//                .addDependency(new Dependency("org.clojure", "core.specs.alpha", "0.2.62"));
-                .addDependency(new Dependency("jresolve.test", "first.solo.dep", "1.0.0"));
-//                .addDependency(new Dependency("org.clojure", "clojure", "1.11.0"));
+                .addDependency(new Dependency("org.clojure", "clojure", "1.11.0"));
         r.run();
     }
 
