@@ -15,6 +15,15 @@
         <version>0.0.1</version>
     </parent>
 
+    <dependencies>
+        <dependency>
+            <groupId>dev.test</groupId>
+            <artifactId>fake.dependency</artifactId>
+            <version>${test.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

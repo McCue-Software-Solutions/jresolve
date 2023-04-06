@@ -13,6 +13,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version.one>5.9.0</junit.version.one>
         <junit.version.two>5.9</junit.version.two>
+        <test.version>1.0.0</test.version>
     </properties>
                 
     <dependencies>
