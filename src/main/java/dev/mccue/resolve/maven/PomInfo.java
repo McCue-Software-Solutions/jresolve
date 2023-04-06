@@ -97,7 +97,7 @@ public record PomInfo(
                                 throw new ModelParseException("Undefined variable " + variable + " used in the POM");
                         }
                 } else {
-                        projectDependencies.add(dependencyPair);
+                        projectDependencies.add(new Tuple2<Configuration, Dependency>(configuration, dependency));
                 }
             }
         } catch (ModelParseException e) { 
