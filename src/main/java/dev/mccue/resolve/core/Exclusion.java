@@ -12,4 +12,8 @@ public record Exclusion(
         Objects.requireNonNull(groupId, "organization must not be null");
         Objects.requireNonNull(artifactId, "moduleName must not be null");
     }
+
+    public boolean isExcluded(Dependency dep) {
+        return (dep.library().groupId() == groupId && dep.library().artifactId() == artifactId);
+    }
 }

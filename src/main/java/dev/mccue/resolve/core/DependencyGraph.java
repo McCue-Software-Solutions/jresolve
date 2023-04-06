@@ -6,13 +6,11 @@ import dev.mccue.resolve.maven.PomParser;
 import dev.mccue.resolve.util.Tuple2;
 import org.xml.sax.SAXException;
 
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
+import java.util.*;
 
 public final class DependencyGraph {
     private final Map<Library, DependencyNode> deps = new HashMap<>();
+    private final ArrayList<DependencyNode> exclusionDeps = new ArrayList<>();
 
     private Repository repository;
 
@@ -58,20 +56,44 @@ public final class DependencyGraph {
      * @param dep
      */
     public void addDependency(Dependency dep) throws ModelParseException, SAXException {
+        addDependency(dep, Exclusions.of(Collections.emptySet()));
+    }
+
+    private void addDependency(Dependency dep, Exclusions exclusions) throws ModelParseException, SAXException {
         var node = new DependencyNode(dep, getDependentPoms(dep));
+
+        if (exclusions.contains(dep)) {
+            return;
+        }
 
         var currentNode = deps.putIfAbsent(node.dependency().getLibrary(), node);   //null if absent, current node if exists
         if (currentNode != null) {
-            if (currentNode.dependency().compareVersion(node.dependency()) < 0) {    //compare versions
-                this.removeDependency(currentNode.dependency());    //remove lower version
-                deps.put(node.dependency().getLibrary(), node);     //replace node with higher version
-            } else {
-                return;
+            if (currentNode.dependency().compareVersion(node.dependency()) < 0) {                                   //if newer version
+                this.removeDependency(currentNode.dependency());                                                        //remove lower version
+                deps.put(node.dependency().getLibrary(), node);                                                         //replace node with higher version
+            } else if (currentNode.dependency().compareVersion(node.dependency()) == 0) {                           //else if same version
+                if (currentNode.dependency().exclusions() != node.dependency().exclusions()) {                          //if different exclusions
+                    var newExclusions = currentNode.dependency().exclusions().meet(node.dependency().exclusions());         //create intersection of exclusions
+                    this.removeDependency(currentNode.dependency());                                                        //remove old dependency
+                    var updatedDep = new Dependency(                                                                        //create updated dependency
+                            node.dependency().library(),
+                            node.dependency().version(),
+                            node.dependency().configuration(),
+                            newExclusions,
+                            node.dependency().publication(),
+                            node.dependency().optional(),
+                            node.dependency().transitive()
+                    );
+                    node = new DependencyNode(updatedDep, getDependentPoms(dep));
+                    deps.put(node.dependency().getLibrary(), node);                                                         //add updated dependency
+                }
+
             }
         }
 
         for (var dependentDep : node.childrenNodes()) {
-            this.addDependency(dependentDep);
+            var nextExclusion = exclusions.join(dependentDep.exclusions());
+            this.addDependency(dependentDep, nextExclusion);
         }
     }
 

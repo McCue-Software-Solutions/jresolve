@@ -16,7 +16,7 @@ public final class Exclusions {
 
     private final ExclusionData exclusionData;
 
-    private Exclusions(ExclusionData exclusionData) {
+    Exclusions(ExclusionData exclusionData) {
         this.hash = 0;
         this.exclusionData = Objects.requireNonNull(
                 exclusionData,
@@ -120,6 +120,15 @@ public final class Exclusions {
 
     public Set<Exclusion> toSet() {
         return this.exclusionData.toSet();
+    }
+
+    public boolean contains(Dependency dep) {
+        for (Exclusion e : this.toSet()) {
+            if (e.isExcluded(dep)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public sealed interface ExclusionData {
