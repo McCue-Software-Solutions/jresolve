@@ -1,144 +1,132 @@
 package dev.mccue.resolve.core;
 
+import dev.mccue.resolve.api.Repository;
+import dev.mccue.resolve.maven.ModelParseException;
+import dev.mccue.resolve.maven.PomParser;
+import dev.mccue.resolve.util.Tuple2;
+import org.xml.sax.SAXException;
+
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 
-import static dev.mccue.resolve.core.DependencyGraph.Interdependency.*;
-
 public final class DependencyGraph {
-    private final Map<DependencyVertex, List<DependencyVertex>> deps = new HashMap<>();
+    private final Map<Library, DependencyNode> deps = new HashMap<>();
 
-     public enum Interdependency {
-        TwoSubOfOne,
-        OneSubOfTwo,
-        NoRelation
+    private Repository repository;
+
+    public DependencyGraph(Repository repository) {
+        this.repository = repository;
+    }
+
+    public ArrayList<Dependency> listDependencies() {
+        ArrayList<Dependency> fullDependencyList = new ArrayList<>();
+
+        for (Library key : deps.keySet()) {
+            fullDependencyList.add(deps.get(key).dependency());
+        }
+
+        return fullDependencyList;
     }
 
     /**
-     * This method takes in a DependencyVertex and returns a list of its subdependencies
+     * This method takes in a Dependency and returns a list of its subdependencies
+     *
      * @param dep
      * @return list of subdependencies
      */
-    List<DependencyVertex> getSubDependencies(DependencyVertex dep) {
-        return deps.get(dep);
+    List<Dependency> getSubDependencies(Dependency dep) {
+        return deps.get(dep.getLibrary()).childrenNodes();
+    }
+
+    private ArrayList<Dependency> getDependentPoms(Dependency dependency) throws SAXException, ModelParseException {
+        var project = PomParser.parsePom(this.repository.getPom(dependency));
+
+        var foundDependencies = new ArrayList<Dependency>();
+        for (Tuple2<Configuration, Dependency> dep : project.dependencies()) {
+            if (dep.first() == Configuration.EMPTY) {
+                foundDependencies.add(dep.second());
+            }
+        }
+        return foundDependencies;
     }
 
     /**
-     * This method takes in a DependencyVertex and adds it to the graph
+     * This method takes in a Dependency and adds it to the graph
+     *
      * @param dep
      */
-    void addDependency(DependencyVertex dep) {
-        deps.putIfAbsent(dep, new ArrayList<>());
-    }
+    public void addDependency(Dependency dep) throws ModelParseException, SAXException {
+        var node = new DependencyNode(dep, getDependentPoms(dep));
 
-    /**
-     * This method takes in a DependencyVertex and removes it from the graph
-     * @param dep
-     */
-    void removeDependency(DependencyVertex dep) {
-        deps.remove(dep);
-        removeSubDependency(dep);
-    }
-
-    /**
-     * This method takes in a primary DependencyVertex and a secondary
-     * DependencyVertex. The secondary is added as a subdependency of the primary
-     * @param dep
-     * @param subDep
-     */
-    void addSubDependency(DependencyVertex dep, DependencyVertex subDep) {
-        if(!deps.containsKey(dep)) {
-            addDependency(dep);
+        var currentNode = deps.putIfAbsent(node.dependency().getLibrary(), node);   //null if absent, current node if exists
+        if (currentNode != null) {
+            if (currentNode.dependency().compareVersion(node.dependency()) < 0) {    //compare versions
+                this.removeDependency(currentNode.dependency());    //remove lower version
+                deps.put(node.dependency().getLibrary(), node);     //replace node with higher version
+            } else {
+                return;
+            }
         }
 
-        if(!deps.containsKey(subDep)) {
-            addDependency(subDep);
+        for (var dependentDep : node.childrenNodes()) {
+            this.addDependency(dependentDep);
         }
-
-        deps.get(dep).add(subDep);
     }
 
     /**
-     * This method takes in a primary DependencyVertex and a secondary
-     * DependencyVertex. The secondary is removed as a subdependency of the primary
+     * This method takes in a Dependency and removes it from the graph
+     *
      * @param dep
-     * @param subDep
      */
-    void removeSubDependency(DependencyVertex dep, DependencyVertex subDep) {
-        deps.get(dep).remove(subDep);
-    }
-
-    /**
-     * This method takes in a DependencyVertex and removes it from all
-     * subdependency lists
-     * @param subDep
-     */
-    void removeSubDependency(DependencyVertex subDep) {
-        deps.values().removeAll(List.of(subDep));
+    public void removeDependency(Dependency dep) {
+        var removedNode = deps.remove(dep.getLibrary());
+        if (removedNode != null) {
+            for (Dependency child : removedNode.childrenNodes()) {
+                removeDependency(child);
+            }
+        }
     }
 
     /**
      * This method returns a boolean indicating whether the provided
-     * DependencyVertex already exists in the graph
+     * Dependency already exists in the graph
+     *
      * @param dep
      * @return
      */
-    public boolean hasDependency(DependencyVertex dep) {
-        return deps.containsKey(dep);
-    }
-
-    /**
-     * This method wth produce a result indicating whether or not a dependency relationship
-     * exists between the two dependencies
-     * @param dep1 assumed as the parent dependency
-     * @param dep2 assumed as the sub dependency
-     * @return 1 if dep2 is a subdependency of dep1, -1 if dep1 is a subdependency of dep2,
-     * 0 if neither are related
-     */
-    public Interdependency hasInterdependency(DependencyVertex dep1, DependencyVertex dep2) {
-        if(deps.get(dep1).contains(dep2)) {
-            return TwoSubOfOne;
-        }
-
-        if(deps.get(dep2).contains(dep1)) {
-            return OneSubOfTwo;
-        }
-
-        return NoRelation;
+    public boolean hasDependency(Dependency dep) {
+        return deps.containsKey(dep.getLibrary());
     }
 
     /**
      * This method returns the number of dependencies in the graph
+     *
      * @return number of dependencies
      */
     public int getDependencyCount() {
         return deps.keySet().size();
     }
 
-    /**
-     * This method returns the number of subdependencies in the graph
-     * @return number of subdependencies
-     */
-    public int getInterdependenciesCount() {
-        int count = 0;
-        for (DependencyVertex v : deps.keySet()) {
-            count += deps.get(v).size();
-        }
-        return count;
-    }
-
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+        int first = 1;
 
-        for(DependencyVertex  v: deps.keySet()) {
-            builder.append(v.toString()).append(" \033[1;37m").append("requires").append("\033[0m { ");
-            for(DependencyVertex w : deps.get(v)) {
-                builder.append(w.toString()).append(" , ");
+        for (Library v : deps.keySet()) {
+            var dep = deps.get(v).dependency();
+            builder.append(dep.library()).append(" ").append(dep.version()).append(" \033[1;37m").append("requires").append("\033[0m { ");
+            for (Dependency w : deps.get(v).childrenNodes()) {
+                if (first == 1) {
+                    builder.append("[").append(w.library()).append(" ").append(w.version()).append("]");
+                    first = 0;
+                } else {
+                    builder.append(" , ").append("[").append(w.library()).append(" ").append(w.version()).append("]");
+                }
             }
             builder.append(" }\n");
+            first = 1;
         }
 
         return (builder.toString());
