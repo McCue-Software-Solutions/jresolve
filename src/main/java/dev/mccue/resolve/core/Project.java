@@ -21,9 +21,6 @@ public record Project(
         Map<Configuration, List<Configuration>> configurations,
 
         @MavenSpecific
-        Optional<Tuple2<Library, String>> parent,
-
-        @MavenSpecific
         List<Tuple2<Configuration, Dependency>> dependencyManagement,
 
         @MavenSpecific
