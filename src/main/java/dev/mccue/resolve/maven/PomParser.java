@@ -15,10 +15,9 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.regex.Pattern;
 
 public final class PomParser extends DefaultHandler {
-    public static Project parsePom(InputStream pom) throws SAXException, ModelParseException {
+    public static PomInfo parsePom(InputStream pom) throws SAXException, ModelParseException {
         var pomParser = new PomParser();
         var factory = SAXParserFactory.newDefaultInstance();
         try {
@@ -29,7 +28,7 @@ public final class PomParser extends DefaultHandler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return pomParser.project();
+        return pomParser.pomInfo();
     }
 
     final State state = new State();
@@ -105,13 +104,14 @@ public final class PomParser extends DefaultHandler {
         String groupId = "";
         Optional<String> artifactIdOpt = Optional.empty();
         String version = "";
+
         Optional<String> parentGroupIdOpt = Optional.empty();
         Optional<String> parentArtifactIdOpt = Optional.empty();
         String parentVersion = "";
+        Optional<String> parentPathOpt = Optional.empty();
 
         String description = "";
         String url = "";
-
 
         Optional<Type> packagingOpt = Optional.empty();
         final ArrayList<Tuple2<Configuration, Dependency>> dependencies = new ArrayList<>();
@@ -154,7 +154,7 @@ public final class PomParser extends DefaultHandler {
 
         final ArrayList<Profile> profiles = new ArrayList<>();
 
-        Project project() throws ModelParseException{
+        PomInfo pomInfo() throws ModelParseException {
             final Optional<String> groupIdOpt;
             if (!groupId.isEmpty()) {
                 groupIdOpt = Optional.of(groupId);
@@ -167,22 +167,6 @@ public final class PomParser extends DefaultHandler {
                 versionOpt = Optional.of(version);
             } else {
                 versionOpt = Optional.of(parentVersion).filter(s -> !s.isEmpty());
-            }
-
-            var dependencies0 = new ArrayList<Tuple2<Configuration, Dependency>>();
-
-            for (var dependency : dependencies) {
-                final var matcher = Pattern.compile("\\$\\{(.*?)\\}").matcher(dependency.second().version());
-                if (matcher.find()) {
-                        final var variable = matcher.group(1);
-                        if (state.properties.containsKey(variable)) {
-                               dependencies0.add(new Tuple2<Configuration, Dependency>(dependency.first(), dependency.second().withVersion(matcher.replaceAll(state.properties.get(variable))))); 
-                        } else {
-                                throw new ModelParseException("Undefined variable " + variable + " used in the POM");
-                        }
-                } else {
-                        dependencies0.add(dependency);
-                }
             }
 
             var properties0 = Map.copyOf(properties);
@@ -201,7 +185,7 @@ public final class PomParser extends DefaultHandler {
                 }
             }
 
-            var finalGroupId = groupIdOpt.orElseThrow(() -> new RuntimeException("No organization found"));
+            var finalGroupId = groupIdOpt.orElseThrow(() -> new RuntimeException("No groupId found"));
             var artifactId = artifactIdOpt.orElseThrow(() -> new RuntimeException("No artifactId found"));
             var finalVersion = versionOpt.orElseThrow(() -> new RuntimeException("No version found"));
 
@@ -213,7 +197,6 @@ public final class PomParser extends DefaultHandler {
             if (parentModule != null && parentVersion.isEmpty()) {
                 throw new RuntimeException("No parent version found");
             }
-
 
             // TODO
             for (var entry : properties0.entrySet()) {
@@ -240,10 +223,10 @@ public final class PomParser extends DefaultHandler {
 
             // TODO: relocationDependencyOpt, etc
 
-            return new Project(
+            return new PomInfo(
                     projModule,
                     finalVersion,
-                    dependencies0, // TODO
+                    dependencies, // TODO
                     Map.of(),
                     parentOpt,
                     List.copyOf(dependencyManagement),
@@ -644,6 +627,11 @@ public final class PomParser extends DefaultHandler {
                                 state.parentVersion = content
                 ),
                 content(
+                        List.of("relativePath", "parent", "project"),
+                        (state, content) ->
+                                state.parentPathOpt = Optional.of(content)
+                ),
+                content(
                         List.of("description", "project"),
                         (state, content) ->
                                 state.description = content
@@ -711,7 +699,7 @@ public final class PomParser extends DefaultHandler {
                 ));
     }
 
-    public Project project() throws ModelParseException {
-        return this.state.project();
+    public PomInfo pomInfo() throws ModelParseException {
+        return this.state.pomInfo();
     }
 }
