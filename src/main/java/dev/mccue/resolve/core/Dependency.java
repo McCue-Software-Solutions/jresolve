@@ -2,7 +2,8 @@ package dev.mccue.resolve.core;
 
 import dev.mccue.resolve.doc.Coursier;
 import dev.mccue.resolve.doc.Incomplete;
-
+import dev.mccue.resolve.util.Tuple2;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -144,5 +145,15 @@ public record Dependency(
             j++;
         }
         return 0;
+    }
+
+    public Dependency findInList(List<Tuple2<Configuration, Dependency>> list) {
+        for (var dependency : list) {
+                if (dependency.second().library() == this.library()) {
+                        return dependency.second();
+                }
+        }
+        return this;
+
     }
 }

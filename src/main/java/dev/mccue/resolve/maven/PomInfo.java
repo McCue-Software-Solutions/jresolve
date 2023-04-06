@@ -83,18 +83,21 @@ public record PomInfo(
         });
         var projectDependencies = new ArrayList<Tuple2<Configuration, Dependency>>(); 
         try {
-            for (var dependency : dependencies0) {
-                final var matcher = Pattern.compile("\\$\\{(.*?)\\}").matcher(dependency.second().version());
+            for (var dependencyPair : dependencies0) {
+                var dependency = dependencyPair.second();
+                var configuration = dependencyPair.first();
+                dependency = dependency.findInList(dependencyManagement);
+                final var matcher = Pattern.compile("\\$\\{(.*?)\\}").matcher(dependency.version());
                 if (matcher.find()) {
                         final var variable = matcher.group(1);
                         if (properties0.containsKey(variable)) {
-                            var dependencyReplaced = new Tuple2<Configuration, Dependency>(dependency.first(), dependency.second().withVersion(matcher.replaceAll(properties0.get(variable)))); 
+                            var dependencyReplaced = new Tuple2<Configuration, Dependency>(configuration, dependency.withVersion(matcher.replaceAll(properties0.get(variable)))); 
                             projectDependencies.add(dependencyReplaced);
                         } else {
                                 throw new ModelParseException("Undefined variable " + variable + " used in the POM");
                         }
                 } else {
-                        projectDependencies.add(dependency);
+                        projectDependencies.add(dependencyPair);
                 }
             }
         } catch (ModelParseException e) { 
