@@ -86,13 +86,13 @@ public final class DependencyGraph {
                     );
                     node = new DependencyNode(updatedDep, getDependentPoms(dep));
                     deps.put(node.dependency().getLibrary(), node);                                                         //add updated dependency
+                } else {
+                    return;                                                                                         //else if older, return
                 }
-
             }
         }
-
+        var nextExclusion = exclusions.join(node.dependency().exclusions());
         for (var dependentDep : node.childrenNodes()) {
-            var nextExclusion = exclusions.join(dependentDep.exclusions());
             this.addDependency(dependentDep, nextExclusion);
         }
     }
