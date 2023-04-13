@@ -11,7 +11,7 @@
 
 <parent>
     <groupId>dev.mccue</groupId>
-    <artifactId>dependency.management</artifactId>
+    <artifactId>dependency.management.parent</artifactId>
     <version>0.0.1</version>
 </parent>
 

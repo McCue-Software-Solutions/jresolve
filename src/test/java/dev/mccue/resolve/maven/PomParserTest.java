@@ -87,6 +87,15 @@ public final class PomParserTest {
                                                         "5.9.0"))),
                                 project.dependencyManagement());
 
+                        assertEquals(List.of(new Tuple2<>(Configuration.TEST,
+                                        new Dependency(new Library(new GroupId("org.junit.jupiter"),
+                                                        new ArtifactId("junit-jupiter-api")),
+                                                        "5.9.0")),
+                                        new Tuple2<>(Configuration.TEST, new Dependency(new Library(
+                                                        new GroupId("org.junit.jupiter"),
+                                                        new ArtifactId("junit-jupiter-params")),
+                                                        "5.9.0"))),
+                                        project.dependencies());
 
                 } catch (ModelParseException e) {
                 } catch (SAXException e) {

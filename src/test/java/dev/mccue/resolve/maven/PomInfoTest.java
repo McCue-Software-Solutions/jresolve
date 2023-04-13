@@ -83,11 +83,11 @@ public class PomInfoTest {
                                                         "dependency.management", "0.0.1")))
                                         .toProject(repository);
 
-                        assertEquals(List.of(new Tuple2<>(Configuration.TEST,
+                        assertEquals(List.of(new Tuple2<>(Configuration.EMPTY,
                                         new Dependency(new Library(new GroupId("org.junit.jupiter"),
                                                         new ArtifactId("junit-jupiter-api")),
                                                         "5.9.0")),
-                                        new Tuple2<>(Configuration.TEST, new Dependency(new Library(
+                                        new Tuple2<>(Configuration.EMPTY, new Dependency(new Library(
                                                         new GroupId("org.junit.jupiter"),
                                                         new ArtifactId("junit-jupiter-params")),
                                                         "5.9.0"))),
@@ -105,11 +105,11 @@ public class PomInfoTest {
                                                         "dependency.management.child", "0.0.1")))
                                         .toProject(repository);
 
-                        assertEquals(List.of(new Tuple2<>(Configuration.TEST,
+                        assertEquals(List.of(new Tuple2<>(Configuration.EMPTY,
                                         new Dependency(new Library(new GroupId("org.junit.jupiter"),
                                                         new ArtifactId("junit-jupiter-api")),
                                                         "5.9.0")),
-                                        new Tuple2<>(Configuration.TEST, new Dependency(new Library(
+                                        new Tuple2<>(Configuration.EMPTY, new Dependency(new Library(
                                                         new GroupId("org.junit.jupiter"),
                                                         new ArtifactId("junit-jupiter-params")),
                                                         "5.9.0"))),

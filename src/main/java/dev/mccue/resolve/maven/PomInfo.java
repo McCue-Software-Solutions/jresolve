@@ -84,9 +84,8 @@ public record PomInfo(
         var projectDependencies = new ArrayList<Tuple2<Configuration, Dependency>>(); 
         try {
             for (var dependencyPair : dependencies0) {
-                var dependency = dependencyPair.second();
+                var dependency = dependencyPair.second().findInList(dependencyManagement());
                 var configuration = dependencyPair.first();
-                dependency = dependency.findInList(dependencyManagement);
                 final var matcher = Pattern.compile("\\$\\{(.*?)\\}").matcher(dependency.version());
                 if (matcher.find()) {
                         final var variable = matcher.group(1);

@@ -151,6 +151,7 @@ public record Dependency(
         for (var dependency : list) {
                 if (dependency.second().library.groupId().equals(this.library.groupId()) && dependency.second().library.artifactId().equals(this.library.artifactId())) {
                         System.out.println("HELLO");
+                        System.out.println(dependency.second());
                         return dependency.second();
                 }
         }
