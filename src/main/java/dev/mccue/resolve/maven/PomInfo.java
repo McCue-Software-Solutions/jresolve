@@ -63,12 +63,16 @@ public record PomInfo(
         Map<String, String> properties0 = new HashMap<>();
         properties0.putAll(this.properties);
 
+        var dependencyManagement0 = new ArrayList<Tuple2<Configuration, Dependency>>();
+        dependencyManagement0.addAll(dependencyManagement);
+
         var dependencies0 = new ArrayList<Tuple2<Configuration, Dependency>>();
         dependencies0.addAll(dependencies);
         
         parent.ifPresent(parent -> {
             try {
                 var parentProject = PomParser.parsePom(repository.getPom(new Dependency(parent.first(), parent.second()))).toProject(repository);
+                dependencyManagement0.addAll(parentProject.dependencyManagement());
                 properties0.putAll(parentProject.properties());
                 for (var dependency : parentProject.dependencies()) {
                     if (!dependencies0.contains(dependency)) {
@@ -84,7 +88,7 @@ public record PomInfo(
         var projectDependencies = new ArrayList<Tuple2<Configuration, Dependency>>(); 
         try {
             for (var dependencyPair : dependencies0) {
-                var dependency = dependencyPair.second().findInList(dependencyManagement());
+                var dependency = dependencyPair.second().findInList(dependencyManagement0);
                 var configuration = dependencyPair.first();
                 final var matcher = Pattern.compile("\\$\\{(.*?)\\}").matcher(dependency.version());
                 if (matcher.find()) {
@@ -102,7 +106,7 @@ public record PomInfo(
         } catch (ModelParseException e) { 
             throw new RuntimeException(e);
         }
-        var project = new Project(module, version, projectDependencies, configurations, dependencyManagement,
+        var project = new Project(module, version, projectDependencies, configurations, dependencyManagement0,
                 properties0, profiles, versions, snapshotVersioning, packagingOpt,
                 relocated, actualVersionOpt, publications);
         return project;
