@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>jresolve.test</groupId>
+    <artifactId>single.exclusion</artifactId>
+    <version>1.0.1</version>
+    <name>single.exclusion</name>
+    <description>Used to represent a dep with a single dependency that is excluded</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>jresolve.test</groupId>
+            <artifactId>first.leaf.dep</artifactId>
+            <version>3.1.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>jresolve.test</groupId>
+                    <artifactId>first.leaf.dep</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+</project>

@@ -26,6 +26,11 @@ public class Resolve {
         return this;
     }
 
+    public Resolve addDependency(Dependency dep, Exclusions exclusions) throws ModelParseException, SAXException {
+        dependencies.addDependency(dep, exclusions);
+        return this;
+    }
+
     public void run() {
         var d = dependencies.listDependencies();
         for (Dependency dep : d) {
