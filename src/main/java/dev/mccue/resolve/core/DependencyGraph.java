@@ -56,7 +56,7 @@ public final class DependencyGraph {
      * @param dep
      */
     public void addDependency(Dependency dep) throws ModelParseException, SAXException {
-        addDependency(dep, Exclusions.of(Collections.emptySet()));
+        addDependency(dep, dep.exclusions());
     }
 
     private void addDependency(Dependency dep, Exclusions exclusions) throws ModelParseException, SAXException {
