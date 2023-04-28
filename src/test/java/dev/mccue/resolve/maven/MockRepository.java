@@ -22,10 +22,11 @@ public class MockRepository implements Repository {
     }
 
     @Override
-    public void download(Dependency dependency, Extension extension, Classifier classifier) {
+    public String download(Dependency dependency, Extension extension, Classifier classifier) {
         if (extension.equals(Extension.POM)) {
             downloaded.add(dependency);
         }
+        return null;
     }
 
     @Override

@@ -35,14 +35,22 @@ public class Resolve {
         System.out.println(dependencies);
     }
 
+    public void downloadJARs() {
+        var d = dependencies.listDependencies();
+        for (Dependency dep : d) {
+            System.out.println(repository.download(dep, Extension.JAR, Classifier.EMPTY));
+        }
+    }
+    
     public ArrayList<Dependency> listDependencies() {
         return dependencies.listDependencies();
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ParserConfigurationException, SAXException, ModelParseException {
         var r = new Resolve(new MavenRepository())
-                .addDependency(new Dependency("org.clojure", "clojure", "1.11.0"));
+                .addDependency(new Dependency("junit", "junit", "4.9"));
         r.run();
+        r.downloadJARs();
     }
 
 }

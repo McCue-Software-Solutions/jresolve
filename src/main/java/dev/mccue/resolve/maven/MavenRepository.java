@@ -95,8 +95,10 @@ public final class MavenRepository implements Repository {
 
     /**
      * Downloads the POM file locally and stores it at the specified path
+     *
+     * @return
      */
-    public void download(Dependency dependency, Extension extension, Classifier classifier) {
+    public String download(Dependency dependency, Extension extension, Classifier classifier) {
         var uri = uriOf(dependency, extension, classifier);
         var path = OSLabel.cachePath(uri.toString());
         try {
@@ -105,6 +107,7 @@ public final class MavenRepository implements Repository {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+        return path.toString();
     }
 
     public InputStream getPom(Dependency dependency) {

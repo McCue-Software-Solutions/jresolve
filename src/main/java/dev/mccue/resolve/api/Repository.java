@@ -7,6 +7,7 @@ import dev.mccue.resolve.core.Extension;
 import java.io.InputStream;
 
 public interface Repository {
-    void download(Dependency dependency, Extension extension, Classifier classifier);
+    String download(Dependency dependency, Extension extension, Classifier classifier);
+
     InputStream getPom(Dependency dependency);
 }
