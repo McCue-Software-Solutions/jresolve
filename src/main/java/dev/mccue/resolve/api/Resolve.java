@@ -3,11 +3,11 @@ package dev.mccue.resolve.api;
 import dev.mccue.resolve.core.*;
 import dev.mccue.resolve.maven.MavenRepository;
 import dev.mccue.resolve.maven.ModelParseException;
-import dev.mccue.resolve.maven.PomParser;
-import dev.mccue.resolve.util.Tuple2;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -35,10 +35,19 @@ public class Resolve {
         System.out.println(dependencies);
     }
 
-    public void downloadJARs() {
+    public void downloadJARs(String pathToSaveFile, String fileName, String fileExtension) {
         var d = dependencies.listDependencies();
+        var builder = new StringBuilder();
         for (Dependency dep : d) {
-            System.out.println(repository.download(dep, Extension.JAR, Classifier.EMPTY));
+            builder.append(repository.download(dep, Extension.JAR, Classifier.EMPTY)).append(";\n");
+        }
+        try {
+            var file = new File(pathToSaveFile, fileName + "." + fileExtension);
+            var writer = new FileWriter(file, false);
+            writer.write(builder.toString());
+            writer.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -48,9 +57,8 @@ public class Resolve {
 
     public static void main(String[] args) throws IOException, InterruptedException, ParserConfigurationException, SAXException, ModelParseException {
         var r = new Resolve(new MavenRepository())
-                .addDependency(new Dependency("junit", "junit", "4.13"));
+                .addDependency(new Dependency("junit", "junit", "4.9"));
         r.run();
-        r.downloadJARs();
     }
 
 }
