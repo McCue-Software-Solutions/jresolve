@@ -41,7 +41,7 @@ public final class DependencyGraph {
     }
 
     private ArrayList<Dependency> getDependentPoms(Dependency dependency) throws SAXException, ModelParseException {
-        var project = PomParser.parsePom(this.repository.getPom(dependency));
+        var project = PomParser.parsePom(this.repository.getPom(dependency)).toProject(repository);
 
         var foundDependencies = new ArrayList<Dependency>();
         for (Tuple2<Configuration, Dependency> dep : project.dependencies()) {

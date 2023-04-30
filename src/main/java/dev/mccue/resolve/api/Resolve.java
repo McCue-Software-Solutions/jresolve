@@ -41,14 +41,14 @@ public class Resolve {
             System.out.println(repository.download(dep, Extension.JAR, Classifier.EMPTY));
         }
     }
-    
+
     public ArrayList<Dependency> listDependencies() {
         return dependencies.listDependencies();
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ParserConfigurationException, SAXException, ModelParseException {
         var r = new Resolve(new MavenRepository())
-                .addDependency(new Dependency("junit", "junit", "4.9"));
+                .addDependency(new Dependency("junit", "junit", "4.13"));
         r.run();
         r.downloadJARs();
     }
